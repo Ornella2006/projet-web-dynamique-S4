@@ -101,3 +101,4 @@ public class PretServiceTest {
         assertEquals("L'adhérent n'existe pas.", exception.getMessage());
     }
 }
+

@@ -40,7 +40,7 @@ public class PretService {
     private JourFerieRepository jourFerieRepository;
 
     @Transactional
-    public void preterExemplaire(int idAdherent, int idExemplaire, String typePret) {
+    public Pret preterExemplaire(int idAdherent, int idExemplaire, String typePret) {
         System.out.println("Début preterExemplaire: idAdherent=" + idAdherent + ", idExemplaire=" + idExemplaire + ", typePret=" + typePret);
 
         // Valider l'adhérent
@@ -132,6 +132,7 @@ public class PretService {
             System.out.println("Exemplaire enregistré: " + exemplaire.getIdExemplaire());
             pretRepository.save(pret);
             System.out.println("Prêt enregistré: " + pret.getIdPret());
+            return pret; // Retourner l'objet Pret
         } catch (Exception e) {
             e.printStackTrace();
             throw new PretException("Erreur lors de l'enregistrement du prêt: " + e.getMessage());

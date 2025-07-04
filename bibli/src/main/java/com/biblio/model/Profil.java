@@ -28,6 +28,13 @@ public class Profil {
     @Column(nullable = false)
     private int dureePenalite;
 
+    public Profil() {
+    }
+
+    public Profil(Integer idProfil) {
+        this.idProfil = idProfil;
+    }
+
     public enum TypeProfil {
         ETUDIANT, PROFESSEUR, PROFESSIONNEL
     }
