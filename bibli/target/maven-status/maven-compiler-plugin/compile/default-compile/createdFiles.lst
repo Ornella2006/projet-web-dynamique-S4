@@ -7,12 +7,16 @@ com\biblio\model\Exemplaire$StatutExemplaire.class
 com\biblio\Application.class
 com\biblio\model\Abonnement.class
 com\biblio\repository\JourFerieRepository.class
+com\biblio\repository\UserRepository.class
 com\biblio\model\Pret$TypePret.class
+com\biblio\model\User.class
 com\biblio\repository\ExemplaireRepository.class
 com\biblio\repository\AbonnementRepository.class
+com\biblio\controller\AuthController.class
 com\biblio\model\Adherent$StatutAdherent.class
 com\biblio\model\Adherent.class
 com\biblio\model\Pret.class
+com\biblio\model\User$Role.class
 com\biblio\service\PretService.class
 com\biblio\exception\PretException.class
 com\biblio\model\Exemplaire.class
