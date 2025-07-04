@@ -1,25 +1,34 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Prêter un livre</title>
+    <title>Formulaire de prêt</title>
 </head>
 <body>
-    <h1>Prêter un livre</h1>
+    <h2>Formulaire de prêt</h2>
     <form action="/pret" method="post">
-        <label>ID Adhérent:</label>
-        <input type="number" name="adherentId" required><br>
-        <label>ID Exemplaire:</label>
-        <input type="number" name="exemplaireId" required><br>
-        <label>Type de prêt:</label>
-        <select name="typePret">
-            <option value="sur_place">Lecture sur place</option>
-            <option value="maison">À la maison</option>
+        <label for="idAdherent">ID Adhérent:</label>
+        <input type="number" id="idAdherent" name="adherentId" required><br>
+
+        <label for="idExemplaire">ID Exemplaire:</label>
+        <input type="number" id="idExemplaire" name="exemplaireId" required><br>
+
+        <label for="typePret">Type de prêt:</label>
+        <select id="typePret" name="typePret">
+            <option value="SUR_PLACE">Sur place</option>
+            <option value="DOMICILE">Domicile</option>
         </select><br>
-        <button type="submit">Prêter</button>
+
+        <input type="submit" value="Valider le prêt">
     </form>
+
     <c:if test="${not empty message}">
         <p style="color: green;">${message}</p>
+    </c:if>
+
+    <c:if test="${not empty error}">
+        <p style="color: red;">${error}</p>
     </c:if>
 </body>
 </html>
