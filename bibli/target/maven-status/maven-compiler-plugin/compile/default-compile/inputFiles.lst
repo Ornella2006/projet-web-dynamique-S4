@@ -5,6 +5,7 @@ C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynami
 C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynamique-S4\bibli\src\main\java\com\biblio\model\Abonnement.java
 C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynamique-S4\bibli\src\main\java\com\biblio\model\Adherent.java
 C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynamique-S4\bibli\src\main\java\com\biblio\model\Exemplaire.java
+C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynamique-S4\bibli\src\main\java\com\biblio\model\jour_ferie.java
 C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynamique-S4\bibli\src\main\java\com\biblio\model\JourFerie.java
 C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynamique-S4\bibli\src\main\java\com\biblio\model\Livre.java
 C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynamique-S4\bibli\src\main\java\com\biblio\model\Pret.java
@@ -13,7 +14,9 @@ C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynami
 C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynamique-S4\bibli\src\main\java\com\biblio\repository\AbonnementRepository.java
 C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynamique-S4\bibli\src\main\java\com\biblio\repository\AdherentRepository.java
 C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynamique-S4\bibli\src\main\java\com\biblio\repository\ExemplaireRepository.java
+C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynamique-S4\bibli\src\main\java\com\biblio\repository\jour_ferieRepository.java
 C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynamique-S4\bibli\src\main\java\com\biblio\repository\JourFerieRepository.java
 C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynamique-S4\bibli\src\main\java\com\biblio\repository\PretRepository.java
 C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynamique-S4\bibli\src\main\java\com\biblio\repository\UserRepository.java
+C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynamique-S4\bibli\src\main\java\com\biblio\service\AbonnementService.java
 C:\Users\ORNELLA\Documents\S4\Naina\Bibliotheques\projet_final\projet-web-dynamique-S4\bibli\src\main\java\com\biblio\service\PretService.java

@@ -2,6 +2,7 @@ package com.biblio.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.DayOfWeek;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,10 +83,12 @@ public class PretService {
 
         // Vérifier le quota de prêts
         long activePrets = pretRepository.countActivePretsByAdherent(idAdherent);
-        System.out.println("Nombre de prêts actifs: " + activePrets + ", Quota: " + adherent.getProfil().getQuotaPret());
-        if (activePrets >= adherent.getProfil().getQuotaPret()) {
+        System.out.println("Nombre de prêts actifs: " + activePrets + ", Quota: " + adherent.getProfil().getQuotaPret()+ ", Quota restant: " + adherent.getQuotaRestant());
+        if (activePrets >= adherent.getProfil().getQuotaPret() || adherent.getQuotaRestant() <= 0) {
             throw new PretException("L'adhérent a atteint son quota de prêts.");
         }
+        adherent.setQuotaRestant(adherent.getQuotaRestant() - 1);
+        adherentRepository.save(adherent);  
 
         // Calculer la date de retour prévue
         LocalDateTime datePret = LocalDateTime.now();
@@ -105,6 +108,33 @@ public class PretService {
                 dateRetourPrevue = dateRetourPrevue.plusDays(1);
             }
         }
+
+        while (dateRetourPrevue.getDayOfWeek() == DayOfWeek.SATURDAY || 
+               dateRetourPrevue.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            System.out.println("Date retour prévue tombe un week-end: " + dateRetourPrevue);
+            dateRetourPrevue = dateRetourPrevue.minusDays(1); // Avancer au vendredi précédent
+        }
+
+        //si je veux que ça soit repousser au lundi (apres au lieu d'avant)
+        /* while (dateRetourPrevue.getDayOfWeek() == DayOfWeek.SATURDAY || 
+            dateRetourPrevue.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            System.out.println("Date retour prévue tombe un week-end: " + dateRetourPrevue);
+            dateRetourPrevue = dateRetourPrevue.plusDays(1); // Repousser au lundi suivant
+        } */
+
+        joursFeries = jourFerieRepository.findByDateFerieBetween(
+                datePret.toLocalDate(), dateRetourPrevue.toLocalDate());
+        for (JourFerie jour : joursFeries) {
+            System.out.println("Jour férié trouvé après ajustement: " + jour.getDateFerie());
+            if (jour.getRegleRendu() == JourFerie.RegleRendu.AVANT
+                    && jour.getDateFerie().isEqual(dateRetourPrevue.toLocalDate())) {
+                dateRetourPrevue = dateRetourPrevue.minusDays(1);
+            } else if (jour.getRegleRendu() == JourFerie.RegleRendu.APRES
+                    && jour.getDateFerie().isEqual(dateRetourPrevue.toLocalDate())) {
+                dateRetourPrevue = dateRetourPrevue.plusDays(1);
+            }
+        }
+
         System.out.println("Date retour prévue ajustée: " + dateRetourPrevue);
 
         // Créer le prêt
@@ -136,6 +166,40 @@ public class PretService {
         } catch (Exception e) {
             e.printStackTrace();
             throw new PretException("Erreur lors de l'enregistrement du prêt: " + e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void retournerExemplaire(int idPret) {
+        System.out.println("Début retournerExemplaire: idPret=" + idPret);
+
+        // Trouver le prêt
+        Pret pret = pretRepository.findById(idPret)
+                .orElseThrow(() -> new PretException("Le prêt n'existe pas."));
+        if (pret.getDateRetourEffective() != null) {
+            throw new PretException("Le prêt a déjà été retourné.");
+        }
+
+        // Mettre à jour la date de retour effective
+        pret.setDateRetourEffective(LocalDateTime.now());
+
+        // Mettre à jour le statut de l'exemplaire
+        Exemplaire exemplaire = pret.getExemplaire();
+        exemplaire.setStatut(Exemplaire.StatutExemplaire.DISPONIBLE);
+
+        // Incrémenter le quota restant de l'adhérent
+        Adherent adherent = pret.getAdherent();
+        adherent.setQuotaRestant(adherent.getQuotaRestant() + 1);
+
+        // Enregistrer les changements
+        try {
+            pretRepository.save(pret);
+            exemplaireRepository.save(exemplaire);
+            adherentRepository.save(adherent);
+            System.out.println("Prêt retourné: " + pret.getIdPret() + ", Exemplaire: " + exemplaire.getIdExemplaire() + ", Quota restant: " + adherent.getQuotaRestant());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PretException("Erreur lors du retour du prêt: " + e.getMessage());
         }
     }
 }

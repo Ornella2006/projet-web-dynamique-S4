@@ -1,9 +1,0 @@
-On devrait avoir une liste de fonctionnalité par ACTEUR
-description OU usecase
-
-Titre
-description
-ACTEUR
-scenario nominal
-scenario alternative
-resultat

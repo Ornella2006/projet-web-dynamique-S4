@@ -35,9 +35,21 @@ public class Adherent {
     @Column(name = "date_naissance", nullable = false)
     private LocalDate dateNaissance;
 
+    @Column(name = "quotat_restant", nullable = true)
+    private Integer quotaRestant;
+
+    public Integer getQuotaRestant() {
+        return quotaRestant;
+    }
+
+    public void setQuotaRestant(Integer quotaRestant) {
+        this.quotaRestant = quotaRestant;
+    }
+
     public enum StatutAdherent {
         ACTIF, INACTIF, SANCTIONNE
     }
+
 
     // Constructeurs
     public Adherent() {}
@@ -116,4 +128,6 @@ public class Adherent {
     public void setDateNaissance(LocalDate dateNaissance) {
         this.dateNaissance = dateNaissance;
     }
+
+    
 }

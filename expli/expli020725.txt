@@ -1,0 +1,18 @@
+projet reel plusieurs dans un an
+licence => entreprise => experience => projet d'ecole 
+en parallele => PROjet perso
+
+Gerer {
+    Gestion de Bibliotheques {
+        modules : grandes lignes des fonctionnalités
+        {
+            y'a livre, exemplaire de livre, pret (sur place, exterieur), 
+            on separe les adherents car les regles de gestion ne sont pas pareil
+            ex : Les regles de gestioen Etudiant peut se porter sur les durées de pret et nmbre de livre qu'il peut prendre
+            livre => ne peut etre emprunter que par des + 18 ans
+            si tu rends pas le livre => Penalite => tu peux pas prendre de livre pendant un certains temps et le duree aussi
+            
+        }
+    }
+}
+

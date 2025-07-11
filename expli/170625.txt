@@ -1,0 +1,31 @@
+Gestion de Bibliotheques
+Modules ou grandes lignes des fonctionnalités  {
+}
+
+Livre => y'a des livres qui ne peuvent etre emprunter a domicile que par les professeurs par exemple
+Exemplaire de livre
+Pret: Lecture sur place, maison
+Adherent: Etudiant, Professionel, Professeur => regles de gestion differents, regles de gestion peut se porter sur duree de pret et nombre de livre emprunter
+Penalite 
+Cotisation ou Inscription
+reservation/profil par type pret si c'est encore disponible
+prolongement
+gestion jour ferie
+
+
+restriction de livre {
+    age 
+    livre peut pas etre empreinter par des adherents de moins de 18ans
+   
+ mais apart on peut tous empreinter
+}
+
+Si tu rends pas livre => penalisation => peut pas prendre un livre pendant un certain temps => et durée parametrable => depend du profil
+
+Carte membre valide que pour une durée limitée {
+    paiement => valide de là jusque là
+    sans reabonnement tu peux pas prendre de livre
+}
+
+
+

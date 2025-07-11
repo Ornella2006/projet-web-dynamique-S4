@@ -104,6 +104,16 @@
                 </div>
                 <button type="submit" class="btn btn-custom w-100">Valider le prêt</button>
             </form>
+
+            <h2 class="mt-4">Retourner un Prêt</h2>
+            <form action="/admin/pret/retour" method="post">
+                <div class="mb-3">
+                    <label for="idPret" class="form-label">ID du Prêt</label>
+                    <input type="number" class="form-control" id="idPret" name="idPret" required>
+                </div>
+                <button type="submit" class="btn btn-custom w-100">Retourner le prêt</button>
+            </form>
+
             <c:if test="${not empty message}">
                 <p class="success">${message}</p>
             </c:if>
