@@ -1,0 +1,2 @@
+quota par profil
+livre/exemplaire => on peut mettre regle par rapport au profil ou age

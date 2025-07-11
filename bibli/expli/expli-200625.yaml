@@ -1,0 +1,82 @@
+Nom(Titre) : Preter un (exemplaire) livre
+Objectif : textuelle ...
+Acteur(Utilisateur) : (profil) bibliothecaires
+Entrée(INPUT) : ref ex, ref adherent(cota peut etre obtenu via ceci) => qu'est ce dont on a besoin pour traiter la fonctionnalité, iformations ? données ?
+Scenario nominal :description fonctionnel d'un cas d'utilisation, description interface,  evenement lier a la fonctionnalité <= c'est ce que regarde les frontend developper, car dans backend developper, il n'a pas besoin de savoir comment on va utliser cette fonction car il a seulement besoin de le créer mais si il va faire full stack c'est là qu'il en a egalement besoin
+                  (Acteur) se connecte 
+                  Va 'a menu' Preter un livre
+                  Remplir champ "adherent", "exemplaire"
+                  Cliquer sur le bouton "Enregistrer"
+                  exemplaire preté par l'adhérent
+                  
+
+CAHIER DES CHARGES : les fonctionnalités devraient etre dans les couches service
+Regle de gestion par rapport à pret d'un livre par un adherent (les checks a faire dans une fonction) (fonctionnalité = USE CASE = cas d'utilisation) = description fonctionnel des cas d'utilisation : => se rapporche de la description de la methodologie de UML, quoi que ne suit pas à 100% la methodologie d'UML, mais on peut quand meme expliquer un fonctionnalité
+    -adh doit etre actif
+    -adh existe (son numero)
+    -exemplaire disponible
+    -quota ?
+    -sanction adherent ?
+    -adherent abonné ? 
+    -exemplaire existe
+    -adherent peut prendre l'exemplaire ? => regle au niveau livre
+    -adherent age ? regle associé @exemplaire ? si y'a une regle approprié pour l'age de l'adherent ?
+    -etc
+
+Scenario alternative a la regle de gestion : => plutot interface
+si la(es) regle(s) de gestion n'est pas satisfait : si y'en a une qui n'est pas satisfait
+affichage message d'erreur => rediriger page d'acceill
+avec cause d'erreur 
+si c'est sanction, on affiche => jusqu'a tel date 
+expiration abonnement => date si l'adherent n'est plus abonnée
+restriction a propos de l'age => et toi tu n'en fais pas encore partie
+.toujours dire les causes des erreurs
+
+RESULTAT : cette partie qu'on ecrit les test unitaires => details de chacun des cas
+Si tous les regles de gestion sont satisfait {
+    (
+        adherent inactif => erreur
+        adherent augmente +1 => son pret
+        adh -1 (nmbre de livre qu'il peut prendre)(quota)
+        exemplaire => indisponible =>jusqu'au date associé a date duree de pret de l'adherent
+        
+    )
+Sinon : on throws exception
+    (
+        Si
+            adh prend un exemplaire          >18, on prend comme ceci tous les cas
+            => message d'erreur=> quota ex: ne diminue pas, livre reste la meme etat, 
+
+            adh sanctionner => message d'erreur
+            pret non fini => etat avant, si on prend un exemplaire disponible il sera toujours disponible 
+
+    )
+}
+
+devrait etre fais dans une couche Service
+
+implementation de cette methode => on connait deja ce qui va se transformer en argument (regle de gestion), interface (scenario nominal, alterantif et resultat)
+
+conception => le plus difficile
+
+test unitaire => interface (y'a un outil) => remplissage de formulaire => fait un submit et test automatiquement
+test unitaire de methode => methode de service ou couche service
+doit avoir une classe de test : PretServiceTest; methode => PreterLivre => PreterLivreTest
+dans PreterLivreTest {
+    on fait select pour appeler serviceDAO dans la coucheDAO, faire une select : donne moi l'adherent => qui est à la fois actif, a encore du cotat et peut
+    prendre ce livre
+    et on prend le livre et on appelle PreterService(PreterLivre) et on lui donne l'argument et apres on verifie, comment ? tous ce qui est ecrit => 
+    tester puis on va dans la base => on appelle vers la base, cet adherent combien de livres restant, il peut prendre => devrait diminuer d'1
+    .avant preterLivre on devrait savoir le numero d'exemplaire disponible, on lance le preterLivre et apres on verifie qu'il n'est plus dispo, et sa date =>
+    date du jour(date de retour du livre) + nmbre de durée de pret associé au profil de l'adherent => implementation serieux de fonctionnalité
+}
+
+Test avant implementation
+au lieu de faire if, dans la base on doit toujours prendre, appel de PreterLivre on doit toujours faire mais le faisage de if 
+on peut utiliser des fonctions condensées , des assertions qui font generalement des asserts
+
+librairie ou framework=> test unitaire JUNIT si on utilise JAVA, Test ng, peut etre coupler dans le projet et on declare class de test 
+par le biais des annotations, on lance pas un par un les méthodes car ils sont plusieurs et c'est là le travail des framework de tester les term
+un clic et il balaye les classes declarées test et il appelle un par un les classes de test et il fait un rapport si c'est 100% successfull ou non (failed)
+et il dit ce qui ne vas pas => assurer que les fonctionnalités marchent vraiment et assurent la robustesse de l'application qu'on fait => ecriture de test unitaires
+
