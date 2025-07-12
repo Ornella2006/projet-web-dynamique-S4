@@ -1,0 +1,11 @@
+quota par profil
+livre/exemplaire => on peut mettre regle par rapport au profil ou age
+
+renre un livre {
+    date
+
+    si posterieur date de retour prevu de l'exemplaire => sanction
+}
+
+
+reservation => simpl
