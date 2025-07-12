@@ -1,7 +1,19 @@
 package com.biblio.model;
 
-import javax.persistence.*;
+
+
 import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "Adherent")
@@ -50,10 +62,10 @@ public class Adherent {
         ACTIF, INACTIF, SANCTIONNE
     }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> master
+
+
+    
     // Constructeurs
     public Adherent() {}
 
@@ -130,10 +142,5 @@ public class Adherent {
 
     public void setDateNaissance(LocalDate dateNaissance) {
         this.dateNaissance = dateNaissance;
-    }
-<<<<<<< HEAD
-=======
-
-    
->>>>>>> master
+    } 
 }

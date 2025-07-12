@@ -109,11 +109,16 @@ public class PretServiceTest {
         PretException exception = assertThrows(PretException.class,
                 () -> pretService.preterExemplaire(1, 1, "DOMICILE"));
         assertEquals("L'adhérent n'existe pas.", exception.getMessage());
+ 
+ 
     }
-<<<<<<< HEAD
-}
 
-=======
+
+
+
+
+
+    
 
     @Test
     public void testPreterExemplaireQuotaDepasse() {
@@ -213,4 +218,6 @@ public class PretServiceTest {
         assertEquals("Le prêt a déjà été retourné.", exception.getMessage());
     }
 }
->>>>>>> master
+
+
+
