@@ -22,7 +22,12 @@ CREATE TABLE Adherent (
     email VARCHAR(100) UNIQUE,
     telephone VARCHAR(20),
     statut ENUM('ACTIF', 'INACTIF', 'SANCTIONNE') DEFAULT 'ACTIF',
+<<<<<<< HEAD
     date_naissance DATE NOT NULL,  -- Pour vérifier les restrictions d'âge
+=======
+    date_naissance DATE NOT NULL, 
+    quotat_restant int default null, -- Pour vérifier les restrictions d'âge
+>>>>>>> master
     FOREIGN KEY (id_profil) REFERENCES Profil(id_profil) ON DELETE RESTRICT
 );
 
@@ -67,7 +72,7 @@ CREATE TABLE Pret (
     prolongation_count INT DEFAULT 0,
     FOREIGN KEY (id_exemplaire) REFERENCES Exemplaire(id_exemplaire) ON DELETE CASCADE,
     FOREIGN KEY (id_adherent) REFERENCES Adherent(id_adherent) ON DELETE CASCADE
-);
+);4+tgttpà^: mù     ,
 
 
 CREATE TABLE Reservation (
@@ -131,8 +136,13 @@ VALUES ('Livre Test', 'Auteur Test', 'Editeur Test', 2020, 'Fiction', '123456789
 INSERT INTO Exemplaire (id_livre, etat, statut)
 VALUES (1, 'BON', 'DISPONIBLE');
 
+<<<<<<< HEAD
 INSERT INTO Adherent (id_profil, nom, prenom, email, telephone, statut, date_naissance)
 VALUES (1, 'Dupont', 'Jean', 'jean.dupont@example.com', '1234567890', 'ACTIF', '2000-01-01');
+=======
+INSERT INTO Adherent (id_profil, nom, prenom, email, telephone, statut, date_naissance, quotat_restant)
+VALUES (1, 'Dupont', 'Jean', 'jean.dupont@example.com', '1234567890', 'ACTIF', '2000-01-01', 3);
+>>>>>>> master
 
 INSERT INTO Abonnement (id_adherent, date_debut, date_fin, montant, statut)
 VALUES (1, '2025-06-01', '2026-06-01', 50.00, 'ACTIVE');
@@ -155,4 +165,12 @@ CREATE TABLE User (
 INSERT INTO User (email, mot_de_passe, role, id_adherent)
 VALUES ('jean.dupont@example.com', 'ad1', 'ADHERENT', 1);
 INSERT INTO User (email, mot_de_passe, role, id_adherent)
+<<<<<<< HEAD
 VALUES ('bibliothecaire@example.com', 'bibli1', 'BIBLIOTHECAIRE', NULL);
+=======
+VALUES ('bibliothecaire@example.com', 'bibli1', 'BIBLIOTHECAIRE', NULL);
+
+ALTER TABLE Adherent ADD quota_restant INT DEFAULT NULL;
+UPDATE Adherent a
+SET a.quota_restant = (SELECT p.quota_pret FROM Profil p WHERE p.id_profil = a.id_profil);
+>>>>>>> master

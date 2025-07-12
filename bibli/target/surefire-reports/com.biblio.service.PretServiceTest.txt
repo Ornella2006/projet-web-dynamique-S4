@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.biblio.service.PretServiceTest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.727 s - in com.biblio.service.PretServiceTest
+=======
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.492 s - in com.biblio.service.PretServiceTest
+>>>>>>> master

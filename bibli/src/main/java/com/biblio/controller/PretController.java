@@ -44,4 +44,22 @@ public class PretController {
             return "pretForm";
         }
     }
+
+    @PostMapping("/admin/pret/retour")
+    public String retournerExemplaire(@RequestParam("idPret") Integer idPret, Model model) {
+        try {
+            pretService.retournerExemplaire(idPret);
+            model.addAttribute("message", "Prêt retourné avec succès. ID du prêt: " + idPret);
+            return "pretForm";
+        } catch (PretException e) {
+            model.addAttribute("error", e.getMessage());
+            return "pretForm";
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("error", "Une erreur inattendue est survenue lors du retour du prêt.");
+            return "pretForm";
+        }
+    }
+
+
 }

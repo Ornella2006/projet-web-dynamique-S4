@@ -1,0 +1,64 @@
+liste de fonctionnalités à faire
+comment expliquer ou donner des informations sur les fonctionnalités
+Exemple de cas : 1 fonctionnalités :
+on lui donne un nom
+doit etre infinitif => verbe d'action
+exemple : preter un livre/exemplaire
+
+fonctionnalités => un methode dans une couche service
+on devrait avoir une classe PreteService et dedans y'a une methode PreterLivre(ref exemplaire, ref adherent)
+
+description de cas d'utilisation qu'on fait en premier et c'est ca que le developper regarde pour etre transformer en code
+et l'ensemble de description + fonctionnalités => en grande partie appeler cahier de charge
+on implemente preter un exemplaire(reservation d'exemplaire) => on devrait avoir des informations qu'on ecrira=> et c'est ca qui est transformer en code
+
+UML => fonctionnalité => use case ou cas d'utilisation
+uml = methodologie pour faire la conception de systeme d'informations, donne bcp de diagramme, issu des besoins, si on veut creer , 1ere chose a faire => requiert de besoin
+recueil de besoin par le biais d'entretien(discussion environnement client, analyse de l'existant), etc apres => cahier de charge => besoin fonctionnel => liste et description fonctionnalités, besoin fonctionnels
+demande du client en terme de fonctionnalités futur du systeme
+listé fonctionnalités => on peut utiliser avec le cahier de charge => norme UML(à quelque chose pres) pour decrire chaque fonctionnalités, peut ne pas l'utilser mais utiliser d'autres canevas
+exemple textuelle ou excel
+
+ensemble DE CELA => grande partie => cahier de charge
+cahier de charge => besoin fonctionnels et besoins non fonctionnels(doivent etre mis dans le cahier de charge) => conception 
+.besoins non fonctionnels {
+    entretien => requiert de besoin, pas forcement un entretien peut etre le client fourni un document, dans le requiert des besoins,
+    on peut voir qu'y a des exigences, y'a d'autres besoins mais qui ne sont pas fonctionnels (durée de chargement de page, chart graphique,
+    par exemple des exigences comme faut utiliser dotnet car on a une license microsoft => devrait etre mise dans le cahier de charge)
+} 
+
+conception (architecture, technologies) { => en general conception relationnelle
+    donnees
+    traitement
+    => UML peut entrer dans l'expression et la presentation de la conception
+    conception relationnelle, on peut faire diagramme MPD (Model Physic de Donnee)
+    concepteur => on peut utliser schema proposé par UML pour remplir le document de la
+    conception
+    comment faire la conception de traitement de ceci => le notre, on ne demande pas encore ca maintenant
+    mais on peut tres bien l'exprimer avec les diagrammes d'UML (UML a 9 diagrammes)
+    conception => on a besoin d'exprimer la conception par rapport aux besoins ou exigences ecrit dans le cahier de charges
+    peut ne pas etre shematiser mais seulement textuelle 
+    exemple : table : colonne
+    reponse de la conception exprimer par nous humain, peut etre textuelle, schematiser
+    schema => plus rapide a lire et a comprendre, proposé par UML aux différentes etapes que ca soit au niveau cahier de charge,
+    traitement, conception, deploiement qu'on peut utliser pour faciliter la presentation de ce qu'on veut afficher que ca soit au niveau des
+    cahiers de charge ou conception relationnelle ou traitement ou deploiement => c'est le but de UML
+}
+
+cas d'utilisation => cahier de charges
+
+diagramme de cas d'utilisation => liste de fonctionnalités, au lieu de lister on fait cas d'utilisation par Acteur
+Par exemple Acteur Bibliothecaires {
+    il peut preter un livre/exemplaire
+    rendre un livre
+    ajouter un adherent
+}
+important => qu'on ait finit de decrire les fonctionnalité
+
+description des fonctionnalités {
+    qui profil peut ...
+    creer type de pret (
+        peut etre sur place ou a domicile => on doit avoir une table fonctionnalité 4 CRUD
+    )
+    a plusieurs regles de gestion doivent etre decrits correctement
+}
