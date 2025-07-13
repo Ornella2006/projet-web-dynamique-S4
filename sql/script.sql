@@ -68,7 +68,7 @@ CREATE TABLE Pret (
     prolongation_count INT DEFAULT 0,
     FOREIGN KEY (id_exemplaire) REFERENCES Exemplaire(id_exemplaire) ON DELETE CASCADE,
     FOREIGN KEY (id_adherent) REFERENCES Adherent(id_adherent) ON DELETE CASCADE
-);4+tgttpà^: mù     ,
+);
 
 
 CREATE TABLE Reservation (

@@ -22,7 +22,9 @@ com\biblio\model\Pret.class
 com\biblio\model\User$Role.class
 com\biblio\service\PretService.class
 com\biblio\exception\PretException.class
+com\biblio\service\RetourService.class
 com\biblio\model\Exemplaire.class
+com\biblio\controller\RetourController.class
 com\biblio\model\Exemplaire$EtatExemplaire.class
 com\biblio\model\jour_ferie$RegleRendu.class
 com\biblio\model\Livre.class
