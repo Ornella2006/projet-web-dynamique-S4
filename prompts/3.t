@@ -1,0 +1,1 @@
+pouvez vous me dire comment faire un pull request qui vient d'un de ces branches feature vers master genre c'esrt moi meme qui va faire un pull request a moi meme et c'est moi meme qui va l'accepter car notre prof nous initie a github et il veut verifier plus tard nos historiques comme preuve sur le projet qu je travail
