@@ -77,6 +77,7 @@
     <div class="sidebar">
         <h3 class="text-center mb-4">Menu Bibliothécaire</h3>
         <a href="/admin/pret">Gérer les Prêts</a>
+        <a href="/admin/retour">Gérer les Prêts</a>
         <a href="/admin/reservation">Gérer les Réservations</a>
         <a href="/admin/livre">Gérer les Livres</a>
         <a href="/admin/exemplaire">Gérer les Exemplaires</a>
@@ -105,22 +106,7 @@
                 <button type="submit" class="btn btn-custom w-100">Valider le prêt</button>
             </form>
 
-            <h2 class="mt-4">Retourner un Prêt</h2>
-            <form action="/admin/pret/retour" method="post">
-                <div class="mb-3">
-                    <label for="idPret" class="form-label">ID du Prêt</label>
-                    <input type="number" class="form-control" id="idPret" name="idPret" required>
-                </div>
-                <button type="submit" class="btn btn-custom w-100">Retourner le prêt</button>
-            </form>
-
-            <c:if test="${not empty message}">
-                <p class="success">${message}</p>
-            </c:if>
-            <c:if test="${not empty error}">
-                <p class="error">${error}</p>
-            </c:if>
-            <a href="/admin/dashboard" class="btn btn-custom mt-3 w-100">Retour au tableau de bord</a>
+           
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

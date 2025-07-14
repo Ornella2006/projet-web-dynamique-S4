@@ -68,6 +68,7 @@
     <div class="sidebar">
         <h3 class="text-center mb-4">Menu Bibliothécaire</h3>
         <a href="/admin/pret">Gérer les Prêts</a>
+        <a href="/admin/retour">Retour des Prêts</a>
         <a href="/admin/reservation">Gérer les Réservations</a>
         <a href="/admin/livre">Gérer les Livres</a>
         <a href="/admin/exemplaire">Gérer les Exemplaires</a>

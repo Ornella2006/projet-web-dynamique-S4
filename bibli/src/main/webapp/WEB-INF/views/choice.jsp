@@ -50,7 +50,7 @@
             <div class="col-md-4">
                 <div class="card text-center p-4 m-2">
                     <h3 class="card-title">Accéder en tant qu'Adhérent</h3>
-                    <p class="card-text">Connectez-vous pour consulter vos prêts et réservations.</p>
+                    <p class="card-text">Connectez-vous pour consulter vos prêts, etc.</p>
                     <a href="/login?role=ADHERENT" class="btn btn-custom">Connexion Adhérent</a>
                 </div>
             </div>

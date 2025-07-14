@@ -51,6 +51,9 @@ public class PretServiceTest {
     @InjectMocks
     private PretService pretService;
 
+     @InjectMocks
+    private RetourService retourService;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -168,7 +171,7 @@ public class PretServiceTest {
 
         when(pretRepository.findById(eq(1))).thenReturn(Optional.of(pret));
 
-        pretService.retournerExemplaire(1);
+        retourService.retournerExemplaire(1);
 
         verify(pretRepository, times(1)).save(pret);
         verify(exemplaireRepository, times(1)).save(exemplaire);
@@ -182,7 +185,7 @@ public class PretServiceTest {
     public void testRetournerExemplairePretNonExistant() {
         when(pretRepository.findById(eq(1))).thenReturn(Optional.empty());
         PretException exception = assertThrows(PretException.class,
-                () -> pretService.retournerExemplaire(1));
+                () -> retourService.retournerExemplaire(1));
         assertEquals("Le prêt n'existe pas.", exception.getMessage());
     }
 
@@ -205,7 +208,7 @@ public class PretServiceTest {
         when(pretRepository.findById(eq(1))).thenReturn(Optional.of(pret));
 
         PretException exception = assertThrows(PretException.class,
-                () -> pretService.retournerExemplaire(1));
+                () -> retourService.retournerExemplaire(1));
         assertEquals("Le prêt a déjà été retourné.", exception.getMessage());
     }
 }
