@@ -1,6 +1,5 @@
 package com.biblio.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.biblio.exception.PretException;
 import com.biblio.model.Pret;
 import com.biblio.service.PretService;
 
@@ -20,10 +18,9 @@ public class PretController {
 
     @GetMapping("/admin/pret")
     public String showPretForm(Model model) {
-          model.addAttribute("typesPret", new String[]{"DOMICILE", "SUR_PLACE"});
+        model.addAttribute("typesPret", new String[]{"DOMICILE", "SUR_PLACE"});
         return "pretForm";
     }
-
 
     @PostMapping("/admin/pret")
     public String preterExemplaire(@RequestParam("adherentId") Integer adherentId,
@@ -44,8 +41,4 @@ public class PretController {
             return "pretForm";
         }
     }
-
-    
-
-
 }

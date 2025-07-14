@@ -5,37 +5,7 @@
     <meta charset="UTF-8">
     <title>Bibliothèque - Connexion</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: url('https://images.unsplash.com/photo-1512820790803-83ca1980f6b9') no-repeat center center fixed;
-            background-size: cover;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-            font-family: 'Georgia', serif;
-        }
-        .login-container {
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
-        }
-        .btn-custom {
-            background-color: #8B4513;
-            color: white;
-        }
-        .btn-custom:hover {
-            background-color: #A0522D;
-        }
-        .error {
-            color: red;
-            font-size: 0.9em;
-        }
-    </style>
+    <link href="/css/public.css" rel="stylesheet">
 </head>
 <body>
     <div class="login-container">

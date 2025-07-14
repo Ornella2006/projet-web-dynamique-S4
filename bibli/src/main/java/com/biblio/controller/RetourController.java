@@ -1,6 +1,9 @@
 package com.biblio.controller;
 
 
+
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,9 +22,11 @@ public class RetourController {
 
     @GetMapping("/admin/retour")
     public String showRetourForm() {
-        //   model.addAttribute("typesPret", new String[]{"DOMICILE", "SUR_PLACE"});
+   
+   
         return "retourForm";
     }
+
 
 
     @PostMapping("/admin/retour")
@@ -29,15 +34,24 @@ public class RetourController {
         try {
             retourService.retournerExemplaire(idPret);
             model.addAttribute("message", "Prêt retourné avec succès. ID du prêt: " + idPret);
-            return "pretForm";
+            return "retourForm";
         } catch (PretException e) {
             model.addAttribute("error", e.getMessage());
-            return "pretForm";
+            return "retourForm";
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("error", "Une erreur inattendue est survenue lors du retour du prêt.");
-            return "pretForm";
+            return "retourForm";
         }
     }
-    
+
+
+
+
+
+
+
+
 }
+
+
