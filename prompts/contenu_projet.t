@@ -1,4 +1,3 @@
-C:.
 │   pom.xml :
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -323,7 +322,6 @@ public class AuthController {
 │   │   │           │       PretController.java :
 package com.biblio.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -331,7 +329,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.biblio.exception.PretException;
 import com.biblio.model.Pret;
 import com.biblio.service.PretService;
 
@@ -343,10 +340,9 @@ public class PretController {
 
     @GetMapping("/admin/pret")
     public String showPretForm(Model model) {
-          model.addAttribute("typesPret", new String[]{"DOMICILE", "SUR_PLACE"});
+        model.addAttribute("typesPret", new String[]{"DOMICILE", "SUR_PLACE"});
         return "pretForm";
     }
-
 
     @PostMapping("/admin/pret")
     public String preterExemplaire(@RequestParam("adherentId") Integer adherentId,
@@ -367,13 +363,13 @@ public class PretController {
             return "pretForm";
         }
     }
-
-    
-
-
 }
+
 │   │   │           │       RetourController.java :
 package com.biblio.controller;
+
+
+
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -394,9 +390,11 @@ public class RetourController {
 
     @GetMapping("/admin/retour")
     public String showRetourForm() {
-        //   model.addAttribute("typesPret", new String[]{"DOMICILE", "SUR_PLACE"});
+   
+   
         return "retourForm";
     }
+
 
 
     @PostMapping("/admin/retour")
@@ -404,17 +402,16 @@ public class RetourController {
         try {
             retourService.retournerExemplaire(idPret);
             model.addAttribute("message", "Prêt retourné avec succès. ID du prêt: " + idPret);
-            return "pretForm";
+            return "retourForm";
         } catch (PretException e) {
             model.addAttribute("error", e.getMessage());
-            return "pretForm";
+            return "retourForm";
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("error", "Une erreur inattendue est survenue lors du retour du prêt.");
-            return "pretForm";
+            return "retourForm";
         }
     }
-    
 }
 
 │   │   │           │
@@ -1511,98 +1508,253 @@ public class RetourService {
      logging.level.org.hibernate.type.descriptor.sql=TRACE
 │   │   │   │
 │   │   │   └───templates
-│   │   │           index.html = rien
-│   │   │           pret.html = rien
+│   │   │          rien
 │   │   │
 │   │   └───webapp
+            |   css
+                   adherent.css :
+                   body {
+    background: url('https://images.unsplash.com/photo-1512820790803-83ca1980f6b9') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Georgia', serif;
+}
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    background-color: rgba(139, 69, 19, 0.95);
+    padding-top: 20px;
+    color: white;
+}
+.sidebar a {
+    color: white;
+    padding: 15px;
+    display: block;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+.sidebar a:hover {
+    background-color: #A0522D;
+}
+.content {
+    margin-left: 270px;
+    padding: 20px;
+}
+.card {
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid #8B4513;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s;
+    text-align: center !important;
+}
+.card:hover {
+    transform: scale(1.05);
+}
+.card-title {
+    color: #8B4513;
+    font-weight: bold;
+}
+.card-text {
+    color: #333;
+}
+.btn-custom {
+    background-color: #8B4513;
+    color: white;
+    border: none;
+}
+.btn-custom:hover {
+    background-color: #A0522D;
+}
+
+                   admin.css : 
+                   body {
+    background: url('https://images.unsplash.com/photo-1512820790803-83ca1980f6b9') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Georgia', serif;
+}
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    background-color: rgba(139, 69, 19, 0.95);
+    padding-top: 20px;
+    color: white;
+}
+.sidebar a {
+    color: white;
+    padding: 15px;
+    display: block;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+.sidebar a:hover {
+    background-color: #A0522D;
+}
+.content {
+    margin-left: 270px;
+    padding: 20px;
+}
+.card {
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid #8B4513;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s;
+    text-align: center !important;
+}
+.card:hover {
+    transform: scale(1.05);
+}
+.card-title {
+    color: #8B4513;
+    font-weight: bold;
+}
+.card-text {
+    color: #333;
+}
+.btn-custom {
+    background-color: #8B4513;
+    color: white;
+    border: none;
+}
+.btn-custom:hover {
+    background-color: #A0522D;
+}
+.form-container {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    margin: auto;
+}
+.error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+.success {
+    color: green;
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+h2 {
+    color: #8B4513;
+    font-weight: bold;
+    text-align: center;
+}
+
+                   public.css :
+                   body {
+    background: url('https://images.unsplash.com/photo-1512820790803-83ca1980f6b9') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    font-family: 'Georgia', serif;
+}
+.card {
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid #8B4513;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s;
+}
+.card:hover {
+    transform: scale(1.05);
+}
+.card-title {
+    color: #8B4513;
+    font-weight: bold;
+}
+.card-text {
+    color: #333;
+}
+.btn-custom {
+    background-color: #8B4513;
+    color: white;
+    border: none;
+}
+.btn-custom:hover {
+    background-color: #A0522D;
+}
+.login-container, .signin-container {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+}
+.error {
+    color: red;
+    font-size: 0.9em;
+}
+
 │   │       └───WEB-INF
 │   │           └───views
-│   │                   adherentDashboard.jsp : 
+                        fragments
+                                sidebar-admin.jsp :
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<div class="sidebar">
+    <h3 class="text-center mb-4">Menu Bibliothécaire</h3>
+    <a href="/admin/pret">Gérer les Prêts</a>
+    <a href="/admin/retour">Retour des Prêts</a>
+    <a href="/admin/reservation">Gérer les Réservations</a>
+    <a href="/admin/livre">Gérer les Livres</a>
+    <a href="/admin/exemplaire">Gérer les Exemplaires</a>
+    <a href="/admin/adherent">Gérer les Adhérents</a>
+    <a href="/logout" class="btn btn-custom mt-3 ms-3">Déconnexion</a>
+</div>
+
+                                sidebar-adherent.jsp :
+                                <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<div class="sidebar">
+    <h3 class="text-center mb-4">Menu Adhérent</h3>
+    <a href="/adherent/prets">Voir mes Prêts</a>
+    <a href="/adherent/reservations">Voir mes Réservations</a>
+    <a href="/adherent/profil">Mon Profil</a>
+    <a href="/logout" class="btn btn-custom mt-3 ms-3">Déconnexion</a>
+</div>
+
+   │                   adherentDashboard.jsp : 
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Tableau de Bord - Adhérent</title>
+    <title>Tableau de Bord - Bibliothécaire</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: url('https://images.unsplash.com/photo-1512820790803-83ca1980f6b9') no-repeat center center fixed;
-            background-size: cover;
-            min-height: 100vh;
-            margin: 0;
-            font-family: 'Georgia', serif;
-        }
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 250px;
-            background-color: rgba(139, 69, 19, 0.95);
-            padding-top: 20px;
-            color: white;
-        }
-        .sidebar a {
-            color: white;
-            padding: 15px;
-            display: block;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-        .sidebar a:hover {
-            background-color: #A0522D;
-        }
-        .content {
-            margin-left: 270px;
-            padding: 20px;
-        }
-        .card {
-            background-color: rgba(255, 255, 255, 0.95);
-            border: 1px solid #8B4513;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s;
-        }
-        .card:hover {
-            transform: scale(1.05);
-        }
-        .card-title {
-            color: #8B4513;
-            font-weight: bold;
-        }
-        .card-text {
-            color: #333;
-        }
-        .btn-custom {
-            background-color: #8B4513;
-            color: white;
-            border: none;
-        }
-        .btn-custom:hover {
-            background-color: #A0522D;
-        }
-    </style>
+    <link href="/css/admin.css" rel="stylesheet">
 </head>
 <body>
-    <div class="sidebar">
-        <h3 class="text-center mb-4">Menu Adhérent</h3>
-        <a href="/adherent/prets">Voir mes Prêts</a>
-        <a href="/adherent/reservations">Voir mes Réservations</a>
-        <a href="/adherent/profil">Mon Profil</a>
-        <a href="/logout" class="btn btn-custom mt-3 ms-3">Déconnexion</a>
-    </div>
+    <%@ include file="fragments/sidebar-admin.jsp" %>
     <div class="content">
         <div class="container">
-            <h1 class="text-center mb-4" style="color: white; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Tableau de Bord Adhérent</h1>
-            <div class="row">
-                <div class="col-md-6">
+            <h1 class="text-center mb-4" style="color: white; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Tableau de Bord Bibliothécaire</h1>
+           <div class="row">
+                <div class="col-md-6 mx-auto">
                     <div class="card p-4 mb-4">
-                        <h3 class="card-title">Bienvenue, Adhérent</h3>
-                        <p class="card-text">Utilisez le menu à gauche pour consulter vos prêts, réservations ou votre profil.</p>
+                        <div class="text-center">
+                            <h3 class="card-title">Bienvenue, Bibliothécaire</h3>
+                            <p class="card-text">Utilisez le menu à gauche pour gérer les prêts, réservations, livres, exemplaires et adhérents.</p>
+                        </div>
                     </div>
                 </div>
             </div>
+            ${content}
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1611,93 +1763,29 @@ public class RetourService {
 
 │   │                   adminDashboard.jsp :
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Tableau de Bord - Bibliothécaire</title>
+    <title>Tableau de Bord - Adhérent</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: url('https://images.unsplash.com/photo-1512820790803-83ca1980f6b9') no-repeat center center fixed;
-            background-size: cover;
-            min-height: 100vh;
-            margin: 0;
-            font-family: 'Georgia', serif;
-        }
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 250px;
-            background-color: rgba(139, 69, 19, 0.95); /* Marron sombre avec opacité */
-            padding-top: 20px;
-            color: white;
-        }
-        .sidebar a {
-            color: white;
-            padding: 15px;
-            display: block;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-        .sidebar a:hover {
-            background-color: #A0522D;
-        }
-        .content {
-            margin-left: 270px;
-            padding: 20px;
-        }
-        .card {
-            background-color: rgba(255, 255, 255, 0.95);
-            border: 1px solid #8B4513;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s;
-        }
-        .card:hover {
-            transform: scale(1.05);
-        }
-        .card-title {
-            color: #8B4513;
-            font-weight: bold;
-        }
-        .card-text {
-            color: #333;
-        }
-        .btn-custom {
-            background-color: #8B4513;
-            color: white;
-            border: none;
-        }
-        .btn-custom:hover {
-            background-color: #A0522D;
-        }
-    </style>
+    <link href="/css/adherent.css" rel="stylesheet">
 </head>
 <body>
-    <div class="sidebar">
-        <h3 class="text-center mb-4">Menu Bibliothécaire</h3>
-        <a href="/admin/pret">Gérer les Prêts</a>
-        <a href="/admin/retour">Retour des Prêts</a>
-        <a href="/admin/reservation">Gérer les Réservations</a>
-        <a href="/admin/livre">Gérer les Livres</a>
-        <a href="/admin/exemplaire">Gérer les Exemplaires</a>
-        <a href="/admin/adherent">Gérer les Adhérents</a>
-        <a href="/logout" class="btn btn-custom mt-3 ms-3">Déconnexion</a>
-    </div>
+    <%@ include file="fragments/sidebar-adherent.jsp" %>
     <div class="content">
         <div class="container">
-            <h1 class="text-center mb-4" style="color: white; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Tableau de Bord Bibliothécaire</h1>
+            <h1 class="text-center mb-4" style="color: white; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Tableau de Bord Adhérent</h1>
             <div class="row">
-                <div class="col-md-6">
-                    <div class="card p-4 mb-4">
-                        <h3 class="card-title">Bienvenue, Bibliothécaire</h3>
-                        <p class="card-text">Utilisez le menu à gauche pour gérer les prêts, réservations, livres, exemplaires et adhérents.</p>
+                <div class="col-md-6 mx-auto">
+                    <div class="card p-4 mb-4 text-center">
+                        <h3 class="card-title">Bienvenue, Adhérent</h3>
+                        <p class="card-text">Utilisez le menu à gauche pour consulter vos prêts, réservations ou votre profil.</p>
                     </div>
                 </div>
             </div>
+            ${content}
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1712,43 +1800,7 @@ public class RetourService {
     <meta charset="UTF-8">
     <title>Bibliothèque - Choix du Profil</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: url('https://images.unsplash.com/photo-1512820790803-83ca1980f6b9') no-repeat center center fixed;
-            background-size: cover;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-            font-family: 'Georgia', serif;
-        }
-        .card {
-            background-color: rgba(255, 255, 255, 0.95);
-            border: 1px solid #8B4513;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s;
-        }
-        .card:hover {
-            transform: scale(1.05);
-        }
-        .card-title {
-            color: #8B4513;
-            font-weight: bold;
-        }
-        .card-text {
-            color: #333;
-        }
-        .btn-custom {
-            background-color: #8B4513;
-            color: white;
-            border: none;
-        }
-        .btn-custom:hover {
-            background-color: #A0522D;
-        }
-    </style>
+    <link href="/css/public.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -1773,21 +1825,7 @@ public class RetourService {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-│   │                   index.jsp :
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Gestion de Bibliothèque</title>
-</head>
-<body>
-    <h1>Bienvenue dans la gestion de bibliothèque</h1>
-    <a href="/pret">Prêter un livre</a>
-    <c:if test="${not empty error}">
-        <p style="color: red;">${error}</p>
-    </c:if>
-</body>
-</html>
+
 │   │                   login.jsp :
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -1796,37 +1834,7 @@ public class RetourService {
     <meta charset="UTF-8">
     <title>Bibliothèque - Connexion</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: url('https://images.unsplash.com/photo-1512820790803-83ca1980f6b9') no-repeat center center fixed;
-            background-size: cover;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-            font-family: 'Georgia', serif;
-        }
-        .login-container {
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
-        }
-        .btn-custom {
-            background-color: #8B4513;
-            color: white;
-        }
-        .btn-custom:hover {
-            background-color: #A0522D;
-        }
-        .error {
-            color: red;
-            font-size: 0.9em;
-        }
-    </style>
+    <link href="/css/public.css" rel="stylesheet">
 </head>
 <body>
     <div class="login-container">
@@ -1851,249 +1859,68 @@ public class RetourService {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
 │   │                   pretForm.jsp :
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Formulaire de Prêt - Bibliothèque</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: url('https://images.unsplash.com/photo-1512820790803-83ca1980f6b9') no-repeat center center fixed;
-            background-size: cover;
-            min-height: 100vh;
-            margin: 0;
-            font-family: 'Georgia', serif;
-            display: flex;
-        }
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 250px;
-            background-color: rgba(139, 69, 19, 0.95);
-            padding-top: 20px;
-            color: white;
-        }
-        .sidebar a {
-            color: white;
-            padding: 15px;
-            display: block;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-        .sidebar a:hover {
-            background-color: #A0522D;
-        }
-        .content {
-            margin-left: 270px;
-            padding: 20px;
-            width: 100%;
-        }
-        .form-container {
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            max-width: 500px;
-            margin: auto;
-        }
-        .btn-custom {
-            background-color: #8B4513;
-            color: white;
-            border: none;
-        }
-        .btn-custom:hover {
-            background-color: #A0522D;
-        }
-        .error {
-            color: red;
-            font-size: 0.9em;
-            margin-top: 10px;
-        }
-        .success {
-            color: green;
-            font-size: 0.9em;
-            margin-top: 10px;
-        }
-        h2 {
-            color: #8B4513;
-            font-weight: bold;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <div class="sidebar">
-        <h3 class="text-center mb-4">Menu Bibliothécaire</h3>
-        <a href="/admin/pret">Gérer les Prêts</a>
-        <a href="/admin/retour">Gérer les Prêts</a>
-        <a href="/admin/reservation">Gérer les Réservations</a>
-        <a href="/admin/livre">Gérer les Livres</a>
-        <a href="/admin/exemplaire">Gérer les Exemplaires</a>
-        <a href="/admin/adherent">Gérer les Adhérents</a>
-        <a href="/logout" class="btn btn-custom mt-3 ms-3">Déconnexion</a>
-    </div>
-    <div class="content">
-        <div class="form-container">
-            <h2>Formulaire de Prêt</h2>
-            <form action="/admin/pret" method="post">
-                <div class="mb-3">
-                    <label for="idAdherent" class="form-label">ID Adhérent</label>
-                    <input type="number" class="form-control" id="idAdherent" name="adherentId" required>
-                </div>
-                <div class="mb-3">
-                    <label for="idExemplaire" class="form-label">ID Exemplaire</label>
-                    <input type="number" class="form-control" id="idExemplaire" name="exemplaireId" required>
-                </div>
-                <div class="mb-3">
-                    <label for="typePret" class="form-label">Type de prêt</label>
-                    <select class="form-control" id="typePret" name="typePret" required>
-                        <option value="SUR_PLACE">Sur place</option>
-                        <option value="DOMICILE">Domicile</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-custom w-100">Valider le prêt</button>
-            </form>
-
-           
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
-│   │                   pretResult.jsp :
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<html>
-<head>
-    <title>Résultat du prêt</title>
-</head>
-<body>
-    <h2>Résultat du prêt</h2>
-    <c:if test="${not empty message}">
-        <p style="color: green;">${message}</p>
-    </c:if>
-    <c:if test="${not empty error}">
-        <p style="color: red;">${error}</p>
-    </c:if>
-    <a href="/pret">Retour au formulaire</a>
-</body>
-</html>
-│   │                   retourForm.jsp :
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Formulaire de Prêt - Bibliothèque</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: url('https://images.unsplash.com/photo-1512820790803-83ca1980f6b9') no-repeat center center fixed;
-            background-size: cover;
-            min-height: 100vh;
-            margin: 0;
-            font-family: 'Georgia', serif;
-            display: flex;
-        }
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 250px;
-            background-color: rgba(139, 69, 19, 0.95);
-            padding-top: 20px;
-            color: white;
-        }
-        .sidebar a {
-            color: white;
-            padding: 15px;
-            display: block;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-        .sidebar a:hover {
-            background-color: #A0522D;
-        }
-        .content {
-            margin-left: 270px;
-            padding: 20px;
-            width: 100%;
-        }
-        .form-container {
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            max-width: 500px;
-            margin: auto;
-        }
-        .btn-custom {
-            background-color: #8B4513;
-            color: white;
-            border: none;
-        }
-        .btn-custom:hover {
-            background-color: #A0522D;
-        }
-        .error {
-            color: red;
-            font-size: 0.9em;
-            margin-top: 10px;
-        }
-        .success {
-            color: green;
-            font-size: 0.9em;
-            margin-top: 10px;
-        }
-        h2 {
-            color: #8B4513;
-            font-weight: bold;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <div class="sidebar">
-        <h3 class="text-center mb-4">Menu Bibliothécaire</h3>
-        <a href="/admin/pret">Gérer les Prêts</a>
-        <a href="/admin/retour">Retour des Prêts</a>
-        <a href="/admin/reservation">Gérer les Réservations</a>
-        <a href="/admin/livre">Gérer les Livres</a>
-        <a href="/admin/exemplaire">Gérer les Exemplaires</a>
-        <a href="/admin/adherent">Gérer les Adhérents</a>
-        <a href="/logout" class="btn btn-custom mt-3 ms-3">Déconnexion</a>
-    </div>
-    <div class="content">
-        <div class="form-container">
-             <h2 class="mt-4">Retourner un Prêt</h2>
-            <form action="/admin/retour" method="post">
-                <div class="mb-3">
-                    <label for="idPret" class="form-label">ID du Prêt</label>
-                    <input type="number" class="form-control" id="idPret" name="idPret" required>
-                </div>
-                <button type="submit" class="btn btn-custom w-100">Retourner le prêt</button>
-            </form>
-
+<link href="/css/admin.css" rel="stylesheet">
+<c:set var="content">
+    <div class="form-container">
+        <h2>Formulaire de Prêt</h2>
+        <form action="/admin/pret" method="post">
+            <div class="mb-3">
+                <label for="idAdherent" class="form-label">ID Adhérent</label>
+                <input type="number" class="form-control" id="idAdherent" name="adherentId" required>
+            </div>
+            <div class="mb-3">
+                <label for="idExemplaire" class="form-label">ID Exemplaire</label>
+                <input type="number" class="form-control" id="idExemplaire" name="exemplaireId" required>
+            </div>
+            <div class="mb-3">
+                <label for="typePret" class="form-label">Type de prêt</label>
+                <select class="form-control" id="typePret" name="typePret" required>
+                    <option value="SUR_PLACE">Sur place</option>
+                    <option value="DOMICILE">Domicile</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-custom w-100">Valider le prêt</button>
             <c:if test="${not empty message}">
                 <p class="success">${message}</p>
             </c:if>
             <c:if test="${not empty error}">
                 <p class="error">${error}</p>
             </c:if>
-            <a href="/admin/dashboard" class="btn btn-custom mt-3 w-100">Retour au tableau de bord</a>
-        </div>
+        </form>
+        <a href="/admin/dashboard" class="btn btn-custom mt-3 w-100">Retour au tableau de bord</a>
     </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+</c:set>
+<%@ include file="adminDashboard.jsp" %>
+
+│   │                   retourForm.jsp :
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link href="/css/admin.css" rel="stylesheet">
+<c:set var="content">
+    <div class="form-container">
+        <h2>Retourner un Prêt</h2>
+        <form action="/admin/retour" method="post">
+            <div class="mb-3">
+                <label for="idPret" class="form-label">ID du Prêt</label>
+                <input type="number" class="form-control" id="idPret" name="idPret" required>
+            </div>
+            <button type="submit" class="btn btn-custom w-100">Retourner le prêt</button>
+            <c:if test="${not empty message}">
+                <p class="success">${message}</p>
+            </c:if>
+            <c:if test="${not empty error}">
+                <p class="error">${error}</p>
+            </c:if>
+        </form>
+        <a href="/admin/dashboard" class="btn btn-custom mt-3 w-100">Retour au tableau de bord</a>
+    </div>
+</c:set>
+<%@ include file="adminDashboard.jsp" %>
+
 │   │                   signin.jsp :
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -2102,37 +1929,7 @@ public class RetourService {
     <meta charset="UTF-8">
     <title>Bibliothèque - Inscription</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: url('https://images.unsplash.com/photo-1512820790803-83ca1980f6b9') no-repeat center center fixed;
-            background-size: cover;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-            font-family: 'Georgia', serif;
-        }
-        .signin-container {
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
-        }
-        .btn-custom {
-            background-color: #8B4513;
-            color: white;
-        }
-        .btn-custom:hover {
-            background-color: #A0522D;
-        }
-        .error {
-            color: red;
-            font-size: 0.9em;
-        }
-    </style>
+    <link href="/css/public.css" rel="stylesheet">
 </head>
 <body>
     <div class="signin-container">
@@ -2178,6 +1975,7 @@ public class RetourService {
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+</html>
 </html>
 │   │
 │   └───test
@@ -2486,3 +2284,169 @@ public class PretServiceTest {
             └───biblio
                 └───service
                         PretServiceTest.class
+
+
+base :
+drop database if exists gestion_bibliotheque;
+CREATE DATABASE if not exists gestion_bibliotheque;
+USE gestion_bibliotheque;
+
+CREATE TABLE Profil (
+    id_profil INT PRIMARY KEY AUTO_INCREMENT,
+    type_profil ENUM('ETUDIANT', 'PROFESSEUR', 'PROFESSIONNEL') NOT NULL,
+    duree_pret INT NOT NULL,  
+    quota_pret INT NOT NULL,       
+    quota_prolongement INT NOT NULL,        
+    quota_reservation INT NOT NULL,          
+    duree_penalite INT NOT NULL              
+);
+
+
+
+CREATE TABLE Adherent (
+    id_adherent INT PRIMARY KEY AUTO_INCREMENT,
+    id_profil INT NOT NULL,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    telephone VARCHAR(20),
+    statut ENUM('ACTIF', 'INACTIF', 'SANCTIONNE') DEFAULT 'ACTIF',
+    date_naissance DATE NOT NULL, 
+    quotat_restant int default null, -- Pour vérifier les restrictions d'âge
+    FOREIGN KEY (id_profil) REFERENCES Profil(id_profil) ON DELETE RESTRICT
+);
+
+CREATE TABLE Abonnement (
+    id_abonnement INT PRIMARY KEY AUTO_INCREMENT,
+    id_adherent INT NOT NULL,
+    date_debut DATE NOT NULL,
+    date_fin DATE NOT NULL,
+    montant DECIMAL(10,2) NOT NULL,  -- Ajout du montant
+    statut ENUM('ACTIVE', 'EXPIREE') DEFAULT 'ACTIVE',
+    FOREIGN KEY (id_adherent) REFERENCES Adherent(id_adherent) ON DELETE CASCADE
+);
+
+CREATE TABLE Livre (
+    id_livre INT PRIMARY KEY AUTO_INCREMENT,
+    titre VARCHAR(255) NOT NULL,
+    auteur VARCHAR(255),
+    editeur VARCHAR(255),
+    annee_publication YEAR,
+    genre VARCHAR(100),
+    isbn VARCHAR(20) UNIQUE,
+    restriction_age INT DEFAULT 0,-- NULL si accessible à tous
+    professeur_seulement BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE Exemplaire (
+    id_exemplaire INT PRIMARY KEY AUTO_INCREMENT,
+    id_livre INT NOT NULL,
+    etat ENUM('BON', 'ABIME', 'PERDU') DEFAULT 'BON',
+    statut ENUM('DISPONIBLE', 'EN_PRET', 'RESERVE', 'LECTURE_SUR_PLACE') DEFAULT 'DISPONIBLE',
+    FOREIGN KEY (id_livre) REFERENCES Livre(id_livre) ON DELETE CASCADE
+);
+
+CREATE TABLE Pret (
+    id_pret INT PRIMARY KEY AUTO_INCREMENT,
+    id_exemplaire INT NOT NULL,
+    id_adherent INT NOT NULL,
+    type_pret ENUM('DOMICILE', 'SUR PLACE') NOT NULL,
+    date_pret DATETIME NOT NULL,
+    date_retour_prevue DATETIME NOT NULL,
+    date_retour_effective DATETIME,
+    prolongation_count INT DEFAULT 0,
+    FOREIGN KEY (id_exemplaire) REFERENCES Exemplaire(id_exemplaire) ON DELETE CASCADE,
+    FOREIGN KEY (id_adherent) REFERENCES Adherent(id_adherent) ON DELETE CASCADE
+);
+
+
+CREATE TABLE Reservation (
+    id_reservation INT PRIMARY KEY AUTO_INCREMENT,
+    id_exemplaire INT NOT NULL,
+    id_adherent INT NOT NULL,
+    date_reservation DATETIME NOT NULL,
+    date_retrait_prevue DATE NOT NULL,
+    date_expiration DATETIME NOT NULL,
+    statut ENUM('EN_ATTENTE', 'VALIDEE', 'ANNULEE', 'EXPIREE') DEFAULT 'EN_ATTENTE',
+    FOREIGN KEY (id_exemplaire) REFERENCES Exemplaire(id_exemplaire),
+    FOREIGN KEY (id_adherent) REFERENCES Adherent(id_adherent)
+);
+
+
+CREATE TABLE Prolongement (
+    id_prolongement INT PRIMARY KEY AUTO_INCREMENT,
+    id_pret INT NOT NULL,
+    date_demande_prolongement DATETIME NOT NULL,
+    nouvelle_date_retour DATETIME NOT NULL,
+    statut ENUM('EN ATTENTE', 'VALIDE', 'REFUSE') DEFAULT 'EN ATTENTE',
+    FOREIGN KEY (id_pret) REFERENCES Pret(id_pret)
+);
+
+CREATE TABLE Penalite (
+    id_penalite INT PRIMARY KEY AUTO_INCREMENT,
+    id_adherent INT NOT NULL,
+    id_pret INT, 
+    date_debut_penalite DATE NOT NULL,
+    date_fin_penalite DATE NOT NULL,
+    raison VARCHAR(255),
+    FOREIGN KEY (id_adherent) REFERENCES Adherent(id_adherent) ON DELETE CASCADE,
+    FOREIGN KEY (id_pret) REFERENCES Pret(id_pret) ON DELETE SET NULL
+);
+
+CREATE TABLE jour_ferie (
+    id_jourferie INT PRIMARY KEY AUTO_INCREMENT,
+    date_ferie DATE UNIQUE NOT NULL,
+    description VARCHAR(255),
+    regle_rendu ENUM('avant', 'apres') DEFAULT 'avant'
+);
+
+
+INSERT INTO jour_ferie (date_ferie, description, regle_rendu) VALUES 
+('2025-01-01', 'Jour de l\'An', 'avant'),
+('2025-03-08', 'Journée internationale des femmes', 'avant'),
+('2025-03-29', 'Commémoration des martyrs', 'avant'),
+('2025-05-01', 'Fête du Travail', 'avant'),
+('2025-06-26', 'Fête de l\'Indépendance', 'avant'),
+('2025-08-15', 'Assomption', 'avant'),
+('2025-11-01', 'Toussaint', 'avant'),
+('2025-12-25', 'Noël', 'avant'),
+('2025-04-18', 'Vendredi Saint', 'avant'),
+('2025-04-20', 'Pâques', 'avant'),
+('2025-05-29', 'Ascension', 'avant'),
+('2025-06-08', 'Pentecôte', 'avant');
+
+INSERT INTO Livre (titre, auteur, editeur, annee_publication, genre, isbn, restriction_age, professeur_seulement)
+VALUES ('Livre Test', 'Auteur Test', 'Editeur Test', 2020, 'Fiction', '1234567890123', 0, FALSE);
+
+INSERT INTO Exemplaire (id_livre, etat, statut)
+VALUES (1, 'BON', 'DISPONIBLE');
+
+INSERT INTO Adherent (id_profil, nom, prenom, email, telephone, statut, date_naissance, quotat_restant)
+VALUES (1, 'Dupont', 'Jean', 'jean.dupont@example.com', '1234567890', 'ACTIF', '2000-01-01', 3);
+
+INSERT INTO Abonnement (id_adherent, date_debut, date_fin, montant, statut)
+VALUES (1, '2025-06-01', '2026-06-01', 50.00, 'ACTIVE');
+
+-- Insert reference data for profiles
+INSERT INTO Profil (type_profil, duree_pret, quota_pret, quota_prolongement, quota_reservation, duree_penalite) VALUES
+('Etudiant', 7, 3, 1, 2, 10),
+('Professionnel', 14, 5, 2, 3, 15),
+('Professeur', 30, 3, 3, 5, 7);
+
+CREATE TABLE User (
+    id_user INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    mot_de_passe VARCHAR(255) NOT NULL,
+    role ENUM('ADHERENT', 'BIBLIOTHECAIRE') NOT NULL,
+    id_adherent INT, -- NULL pour les bibliothécaires
+    FOREIGN KEY (id_adherent) REFERENCES Adherent(id_adherent) ON DELETE CASCADE
+);
+
+INSERT INTO User (email, mot_de_passe, role, id_adherent)
+VALUES ('jean.dupont@example.com', 'ad1', 'ADHERENT', 1);
+INSERT INTO User (email, mot_de_passe, role, id_adherent)
+VALUES ('bibliothecaire@example.com', 'bibli1', 'BIBLIOTHECAIRE', NULL);
+
+ALTER TABLE Adherent ADD quota_restant INT DEFAULT NULL;
+UPDATE Adherent a
+SET a.quota_restant = (SELECT p.quota_pret FROM Profil p WHERE p.id_profil = a.id_profil);

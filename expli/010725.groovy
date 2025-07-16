@@ -29,13 +29,13 @@ Pa rapport a la penalité c'est apres qu'on l'ait rendu qu'on compte les jours d
 et si par exemple il a encore un autre livre qu'il devrait rendre le 5Juillet or il l'a rendu le 8Juillet alors ses jours de penalisation sera compter a partir de 12Juillet veille de penalisation de celui d'avant
 
 donc il sera penalisé
-si par exemple il devait rendre un livre le 7 Juillet mais que le 8 Juillet il va prendre un autre livre => alors il peut car y'a encore un livre qu'il n'a pas encore rendu par contre => la sanction ne commencera qu'a partir
+si par exemple il devait rendre un livre le 7 Juillet mais que le 8 Juillet il va prendre un autre livre => alors il peut car y'a encore un livre qu'il n'a pas encore rendu par contre => la sanction ne commencer(effective) a qu'a partir
 du jour qu'il aurait rendu le livre
 
 abonnement => date seulement, ici jusqu'ici il est abonner 
 inscription => abonnement
 
-bibliothecairedit juste ce adherent est abonner ici jsqu'à tel date
+bibliothecaire dit juste ce adherent est abonner ici jsqu'à tel date
 adherent a login et mdp peut entre dedans mais ne peut rien faire
 
 renouvellement d'abonnement => on a seulement besoin de periode(date)
@@ -45,6 +45,7 @@ cotat => 3livres, il a pris 1 sur 3, et ce 1 doit etre rendu 10Juillet et il l'a
 mais ne peut rien prendre s'il est pas abonner
 cotat lier au profil
 
+----*-----
 reservation peut etre accepter et peut ne pas etre accepter par le bibliothecaire, le systeme ne met pas des regles
 et meme s'il accepte ca ne devient pas directement un pret mais l'adherent durant la date jour j de la reservation 
 devrait preter le livre => et c'est là que tous les regles de gestion entrent => annuler reservation dans ce cas
@@ -56,8 +57,22 @@ quotat et tarif pareil
 
 il peut toujours voir l'etat ou la fiche de l'adherent mais on ne voit pas les regles dans l'accepation ou recu de reservation mais c'est juste le bibliothecaire qui dit s'il accepte ou s'il le revise
 
+jour ferier => weekend et jour ferier ensemble {
+    check dans une table => OUI ou non
+    change avec ca date retour
+    c'est a nous de choisir ou le faire, au moment du pret ou ...
+
+}
 
 reservation et pret en retard => ne sont pas liés
+Retard {
+    t'es en retard et tu veux prendre un livre (exemplaire) => tu peux pas
+    s'il y'a une reservation deja accepté et que tu veux rendre en pret => tu ne peux pas => pareil que pret normale car prend deja les regles de gestion du pret a la minute ou tu veux rendre en pret
+}
+
+le livre reste juste reserver => meme si c'est un adherent sanctionner qui l'a reserver, par exemple la reservation a deja ete accepter mais le bibliothecaire peut faire des recherches et il peut refuser 
+un tel ou telle reservation
+
 s'il y'a une reservation et que tu n'a pas rendu un livre => n'est pas transformé en pret, et si y'a une reservation deja accepter et que tu veuille en faire un pret => ne peut pas si tu n'a pas encore rendu de livre 
 livre => reserver => meme si l'adherent est sanctionner
 

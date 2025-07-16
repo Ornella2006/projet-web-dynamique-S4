@@ -1,0 +1,611 @@
+donc
+ finalement avec toutes les explications de mon prof que je vous ai fourni qu'est ce qui a ete decider ? est ce que la validation d'un reservation conduit directeent à un pret finalmeent ou ? car si ce n'est pas cela et qu'on a encore besoin que la bilbiohtecaire convert en pret ca peut pas car le livre apres valdidation est reserver or quand on le conver en pret les regles de gestion de pret entrernt en compte et ils nepouraient pas etre converties en pret car son statut neserait plus disponible donc il ne sera convertit
+
+je vais vous fournir les explications de mon professeur c'est mieux :
+1.
+Penalite => non rendu de livre
+globale pour tous ou par type de profil d'adherent ? => pour tous le monde mais chacun a son nombre de jour par profil, on aprametre : par exemple ce profil 10j ou 20j ou ...
+Par contre, y'a des cas : par exemple on est 1er juillet, et il a 2 livres, pret en cours, l'un doit etre rendu 2juillet et l'autre 10juillet et il a pas rendu celui de 2juillet
+donc il peut pas prendre de livre que le 12juillet 
+et arriver la date de rendu du 2eme livre 10juillet et il l'a pas encore rendu donc + 10j de penalité encore, c'est pas a partir de 10Juillet qu'on fait + 10j de penalité mais sur sa date de sanction 12Juillet donc ca devient 22juillet qu'il peut reprendre
+
+cotat {
+    par profil
+    ce profil peut prendre 5 ou 3 nombres de livre
+}
+
+nombre de prolongements parallere à parametrer {
+    ne peut pas faire prolongements de pret 3 en meme temps
+    y'a pas de pret prolonger 3 en cours
+    on doit savoir quand ce pret en cours si c'est prolonger ou pas car on limite le pret
+    si c'est pret normale peut prendre 5
+    et on lui dit qu'il ne peut faire de prolongement que 2 de ces prets
+    donc 3 prets normale et 2 prets prolongées par exemple 
+}
+
+cotat non renouveler => parametrer
+pret => cotat dans la base en cours 
+
+interface ou script dans bd => update de cotat
+
+Pa rapport a la penalité c'est apres qu'on l'ait rendu qu'on compte les jours de penalisation ou ?
+=> y'a un livre qui devrait etre rendu un 1er Juillet or il l'a rendu que le 3Juillet donc c'est à partir du 3Juillet qu'on compte et qu'on ajoute les jours de penalisation dans la base
+=> s'il a pas pu rendre celui apres et quand il le rend enfin, c'est encore + 10j donc à partir de 13Juillet qu'il peut reprendre
+et si par exemple il a encore un autre livre qu'il devrait rendre le 5Juillet or il l'a rendu le 8Juillet alors ses jours de penalisation sera compter a partir de 12Juillet veille de penalisation de celui d'avant
+
+donc il sera penalisé
+si par exemple il devait rendre un livre le 7 Juillet mais que le 8 Juillet il va prendre un autre livre => alors il peut car y'a encore un livre qu'il n'a pas encore rendu par contre => la sanction ne commencer(effective) a qu'a partir
+du jour qu'il aurait rendu le livre
+
+abonnement => date seulement, ici jusqu'ici il est abonner 
+inscription => abonnement
+
+bibliothecaire dit juste ce adherent est abonner ici jsqu'à tel date
+adherent a login et mdp peut entre dedans mais ne peut rien faire
+
+renouvellement d'abonnement => on a seulement besoin de periode(date)
+
+cotat => 3livres, il a pris 1 sur 3, et ce 1 doit etre rendu 10Juillet et il l'a pas encore rendu et le 11Juillet il veut prendre un livre => ne peut pas car il a pas encore rendu celui qu'il devait rendre a sa date prevu de retour 
+
+mais ne peut rien prendre s'il est pas abonner
+cotat lier au profil
+
+----*-----
+reservation peut etre accepter et peut ne pas etre accepter par le bibliothecaire, le systeme ne met pas des regles
+et meme s'il accepte ca ne devient pas directement un pret mais l'adherent durant la date jour j de la reservation 
+devrait preter le livre => et c'est là que tous les regles de gestion entrent => annuler reservation dans ce cas
+
+----*-----
+reservation => quotat
+prolongement de pret => quotat
+quotat et tarif pareil 
+
+il peut toujours voir l'etat ou la fiche de l'adherent mais on ne voit pas les regles dans l'accepation ou recu de reservation mais c'est juste le bibliothecaire qui dit s'il accepte ou s'il le revise
+
+jour ferier => weekend et jour ferier ensemble {
+    check dans une table => OUI ou non
+    change avec ca date retour
+    c'est a nous de choisir ou le faire, au moment du pret ou ...
+
+}
+
+reservation et pret en retard => ne sont pas liés
+Retard {
+    t'es en retard et tu veux prendre un livre (exemplaire) => tu peux pas
+    s'il y'a une reservation deja accepté et que tu veux rendre en pret => tu ne peux pas => pareil que pret normale car prend deja les regles de gestion du pret a la minute ou tu veux rendre en pret
+}
+
+le livre reste juste reserver => meme si c'est un adherent sanctionner qui l'a reserver, par exemple la reservation a deja ete accepter mais le bibliothecaire peut faire des recherches et il peut refuser 
+un tel ou telle reservation
+
+s'il y'a une reservation et que tu n'a pas rendu un livre => n'est pas transformé en pret, et si y'a une reservation deja accepter et que tu veuille en faire un pret => ne peut pas si tu n'a pas encore rendu de livre 
+livre => reserver => meme si l'adherent est sanctionner
+
+la bibliothecaire peut faire des recherches qu'il annule les reservations
+
+2.
+Gestion de Bibliotheques
+Modules ou grandes lignes des fonctionnalités  {
+}
+
+Livre => y'a des livres qui ne peuvent etre emprunter a domicile que par les professeurs par exemple
+Exemplaire de livre
+Pret: Lecture sur place, maison
+Adherent: Etudiant, Professionel, Professeur => regles de gestion differents, regles de gestion peut se porter sur duree de pret et nombre de livre emprunter
+Penalite 
+Cotisation ou Inscription
+reservation/profil par type pret si c'est encore disponible
+prolongement
+gestion jour ferie
+
+
+restriction de livre {
+    age 
+    livre peut pas etre empreinter par des adherents de moins de 18ans
+   
+ mais apart on peut tous empreinter
+}
+
+Si tu rends pas livre => penalisation => peut pas prendre un livre pendant un certain temps => et durée parametrable => depend du profil
+
+Carte membre valide que pour une durée limitée {
+    paiement => valide de là jusque là
+    sans reabonnement tu peux pas prendre de livre
+}
+
+3.
+formulaire rendre livre => date
+et on fera une date posterieur au date de retour prevu => sanctionner adherent
+et si c posterieur avec la date de retour prevu de l'exemplaire, appliquer => sanction
+a partir du date qu'on a rendu le livre que la sanction commence et non la date du jour
+
+reservation sesulement adherent avec date et 1 livre
+
+interface bibliothecaire => accepter ou refuser reservation
+il peut refuser ou accepter
+un livre => peut avoir plusieurs reservations de memes ou differentes dates
+
+et puis tombe enfin le jour ou la reservation sera un pret(ce que seul la bibliothecaire peut faire
+) alors c'est la que les regles de gestion du pret entrent en jeu egalement
+
+seulement bibliothecaire peut faire un pret
+user => reservation et prolongement seulement mais passe encore par la validation du bibliothecaire
+
+
+demande prolongement => pret en cours => changer ou modifier en prolonger
+ recheche => reserver
+
+difference entre reservation accepter et devenu pret
+accepter {
+    par exemple il fait une reservation pour le 30Juillet et le bibliothecaire n'accepte ou ne refuse le 15
+    si il refuse => augmente le reste de reservation qu'il peut faire 
+    si il accepte => il ne peut plus faire de reservation car ca entre deja dans les "reservations en cours"
+    15 juillet => accepter
+    30 Juillet => devient un pret
+    c'est la difference
+}
+
+
+acceptation du bibliothecaire => change directement en pret 
+a partir date fin du date prevu => il commence de la pour faire + xx jours
+
+4.
+script de reinitialisation de bd {
+    drop de tous les elements dans la base
+    creation
+    doit avoir tous les contraintes dans la base
+}
+
+diferent de script d'insertion de donnee de reference '(
+    donne ou on en pas et dont on a pas besoin de crud
+    inserer dans une table directe
+    drop table dans un script
+)
+
+prinicipe de fonctionallite a implementer et les autres jjsute a insere directe
+donne de test c'est a nous e l creer[
+     cet adherent je le fais non abonner et si il emprunte des livres et il devrait avoir un erreur et il ne devrait pas pouvoir faire un pret car son abonement sera fini
+     
+]
+
+.tous ce qu'on a fait => regles de gestion => devrait avoir des données correspondants pour faire des test apres
+
+5.
+alea => une seule fonctionalite
+
+10h a 17h => jeu de donnee test
+
+donne de reference et donne non referencié exemple adherent
+d'autres dans l'interface et d'autres en insert
+test de tous les scenarios
+
+fonctionalite principale devrait avoir de l'interface
+
+
+interface de creation d'adherent utile et non utilisateur
+
+spring boot et mvc
+
+creation de repository => a chaque changement => commit => demande de Pull Request => merge
+
+Cotisation => pas de penalité
+penalisation => non retour de livre
+
+
+-----27/26/25------------
+Les trucs que notre prof corrigerai :
+Pull Request
+Conception de base de données => MPD = Model Physics de Données => si y'a une faute on a pas de note haute
+ecran liste de tous les Pull Request qu'on fera
+
+cotisation => pas de penalité
+mais il peut dire j'ai plus d'abonnement c'est fini aujourd'hui et il n'est pas penalisé
+
+penalisation => non retour de livre seulement
+
+6.
+quota par profil
+livre/exemplaire => on peut mettre regle par rapport au profil ou age
+
+renre un livre {
+    date
+
+    si posterieur date de retour prevu de l'exemplaire => sanction
+}
+
+
+reservation => simpl
+
+7.
+Nom(Titre) : Preter un (exemplaire) livre
+Objectif : textuelle ...
+Acteur(Utilisateur) : (profil) bibliothecaires
+Entrée(INPUT) : ref ex, ref adherent(cota peut etre obtenu via ceci) => qu'est ce dont on a besoin pour traiter la fonctionnalité, iformations ? données ?
+Scenario nominal :description fonctionnel d'un cas d'utilisation, description interface,  evenement lier a la fonctionnalité <= c'est ce que regarde les frontend developper, car dans backend developper, il n'a pas besoin de savoir comment on va utliser cette fonction car il a seulement besoin de le créer mais si il va faire full stack c'est là qu'il en a egalement besoin
+                  (Acteur) se connecte 
+                  Va 'a menu' Preter un livre
+                  Remplir champ "adherent", "exemplaire"
+                  Cliquer sur le bouton "Enregistrer"
+                  exemplaire preté par l'adhérent
+                  
+
+CAHIER DES CHARGES : les fonctionnalités devraient etre dans les couches service
+Regle de gestion par rapport à pret d'un livre par un adherent (les checks a faire dans une fonction) (fonctionnalité = USE CASE = cas d'utilisation) = description fonctionnel des cas d'utilisation : => se rapporche de la description de la methodologie de UML, quoi que ne suit pas à 100% la methodologie d'UML, mais on peut quand meme expliquer un fonctionnalité
+    -adh doit etre actif
+    -adh existe (son numero)
+    -exemplaire disponible
+    -quota ?
+    -sanction adherent ?
+    -adherent abonné ? 
+    -exemplaire existe
+    -adherent peut prendre l'exemplaire ? => regle au niveau livre
+    -adherent age ? regle associé @exemplaire ? si y'a une regle approprié pour l'age de l'adherent ?
+    -etc
+
+Scenario alternative a la regle de gestion : => plutot interface
+si la(es) regle(s) de gestion n'est pas satisfait : si y'en a une qui n'est pas satisfait
+affichage message d'erreur => rediriger page d'acceill
+avec cause d'erreur 
+si c'est sanction, on affiche => jusqu'a tel date 
+expiration abonnement => date si l'adherent n'est plus abonnée
+restriction a propos de l'age => et toi tu n'en fais pas encore partie
+.toujours dire les causes des erreurs
+
+RESULTAT : cette partie qu'on ecrit les test unitaires => details de chacun des cas
+Si tous les regles de gestion sont satisfait {
+    (
+        adherent inactif => erreur
+        adherent augmente +1 => son pret
+        adh -1 (nmbre de livre qu'il peut prendre)(quota)
+        exemplaire => indisponible =>jusqu'au date associé a date duree de pret de l'adherent
+        
+    )
+Sinon : on throws exception
+    (
+        Si
+            adh prend un exemplaire          >18, on prend comme ceci tous les cas
+            => message d'erreur=> quota ex: ne diminue pas, livre reste la meme etat, 
+
+            adh sanctionner => message d'erreur
+            pret non fini => etat avant, si on prend un exemplaire disponible il sera toujours disponible 
+
+    )
+}
+
+devrait etre fais dans une couche Service
+
+implementation de cette methode => on connait deja ce qui va se transformer en argument (regle de gestion), interface (scenario nominal, alterantif et resultat)
+
+conception => le plus difficile
+
+test unitaire => interface (y'a un outil) => remplissage de formulaire => fait un submit et test automatiquement
+test unitaire de methode => methode de service ou couche service
+doit avoir une classe de test : PretServiceTest; methode => PreterLivre => PreterLivreTest
+dans PreterLivreTest {
+    on fait select pour appeler serviceDAO dans la coucheDAO, faire une select : donne moi l'adherent => qui est à la fois actif, a encore du cotat et peut
+    prendre ce livre
+    et on prend le livre et on appelle PreterService(PreterLivre) et on lui donne l'argument et apres on verifie, comment ? tous ce qui est ecrit => 
+    tester puis on va dans la base => on appelle vers la base, cet adherent combien de livres restant, il peut prendre => devrait diminuer d'1
+    .avant preterLivre on devrait savoir le numero d'exemplaire disponible, on lance le preterLivre et apres on verifie qu'il n'est plus dispo, et sa date =>
+    date du jour(date de retour du livre) + nmbre de durée de pret associé au profil de l'adherent => implementation serieux de fonctionnalité
+}
+
+Test avant implementation
+au lieu de faire if, dans la base on doit toujours prendre, appel de PreterLivre on doit toujours faire mais le faisage de if 
+on peut utiliser des fonctions condensées , des assertions qui font generalement des asserts
+
+librairie ou framework=> test unitaire JUNIT si on utilise JAVA, Test ng, peut etre coupler dans le projet et on declare class de test 
+par le biais des annotations, on lance pas un par un les méthodes car ils sont plusieurs et c'est là le travail des framework de tester les term
+un clic et il balaye les classes declarées test et il appelle un par un les classes de test et il fait un rapport si c'est 100% successfull ou non (failed)
+et il dit ce qui ne vas pas => assurer que les fonctionnalités marchent vraiment et assurent la robustesse de l'application qu'on fait => ecriture de test unitaires
+
+8.
+projet reel plusieurs dans un an
+licence => entreprise => experience => projet d'ecole 
+en parallele => PROjet perso
+
+Gerer {
+    Gestion de Bibliotheques {
+        modules : grandes lignes des fonctionnalités
+        {
+            y'a livre, exemplaire de livre, pret (sur place, exterieur), 
+            on separe les adherents car les regles de gestion ne sont pas pareil
+            ex : Les regles de gestioen Etudiant peut se porter sur les durées de pret et nmbre de livre qu'il peut prendre
+            livre => ne peut etre emprunter que par des + 18 ans
+            si tu rends pas le livre => Penalite => tu peux pas prendre de livre pendant un certains temps et le duree aussi
+            
+        }
+    }
+}
+
+9.
+1/ reservation {
+    y'a quelqu'un qui peut reserver un pret et qui dit moi je veux emprunter ce livre a ce date,
+    par profil nombre de livres qu'il peut reserver et par rapport au type de pret egalement
+    basé aussi sur la disponibilité du livre
+    ex : livre reserver 7 juillet 
+    .adherent quand il rentre dans le systeme savent quand tous les exemplaire sur ce livre revienne
+    et il voit par exemple 6juillet tous les exemplaire reviennent ou qu'un seule exemplaire est disponible(revienne)
+    bah il peut reserver pour 7juillet => demande de reservation qu'il fait
+    et ce livre n'est pas encore reserver, besoin de Bibliothecaire pour valider(accepter) la reservation
+    et quand c'est accepter par le Bibliothecaire => le livre devient indisponible quand y'a un autre adherent qui fait la recherche de cet
+    exemplaire et son etat devient => "reserver"
+    etat => disponible, en pret, reserver, en lecture sur place => 4etats des exemplaires
+    ce n'est que quand c'est disponible qu'on peut en faire un pret
+
+    et vint la personne ou l'adherent le 7juillet pour dire qu'il en a deja fait la reservation de l'exemplaire en question
+    et le Bibliothecaire voit directement qu'il l'a reserver et le livre ou l'exemplaire devient non disponible et l'exemplaire 
+    devient pret en "domicile" par contre si la personne ou l'adherent ne vient jusqu à la tombée du jour, le lendemain l'exemplaire redevient dispo
+
+    RESERVATION / par profil
+}
+
+ 2/ PROLONGEMENT PAR PROFIL egalement {
+    c'est par profil qu'on peut dire qu'il peut le faire et s'il peut le faire alors combien de fois il peut faire le prolongement et combien d'exemplaires
+    il peut faire en parallele de prolongement de pret
+    .Par exemple si le pret doit etre terminer 28 juin
+    on peut aussi dire la date de demande de prolongement, exemple 2jours a l'avance et le "2" est parametrer et s'il dit 2j ou 48h a l'avance(fin 
+    de pret), il demande de prolonger le pret car il va pas le rendre le 28juin
+    et c'est le Bibliothecaire qui valide ce prolongement mais y'a aussi des regles de gestion qui sont placées qu'on ne peut pas demander des prolongements si 
+    tu as atteint tes quotas et si tu n'a pas la permission => le bouton prolongement de pret n'est juste pas disponible(desactiver) dans ces cas là
+    .Les adherents rentrent et ils voient directe la liste de leurs prets en cours et seuls ceux qui sont autorisées et possible de prolongement => y'a deja le bouton prolonger le pret a coté sinon c'est pas possible
+    .tu demandes un prolongement => valider par le Bibliothecaire => apres validation du Bibliothecaire => si c'etait 28juin que le livre devait etre rendu mais que ta durée est de 7jours 
+    alors le livre peut finalement etre rendu et etre disponible le 5juillet, date de rendu prevu apres prolongement de pret
+
+ }
+
+ 3/ Gestion de jour ferié {
+    par exemple tu as prevu de rendre un livre un 26juin or la Bibliotheque est fermé donc devrait stocker tous les jours feries dans le systemes donc si le livre n'est pas rendu le 26juin alors tu ne
+    seras pas penalisé car meme la Bibliotheque etait fermé, regle qui doit etre contenu => parametres => avant ou apres qu'il doit etre rendu et le Bibliothecaire est libre de mettre ces 
+    conditions, s'il le fait avant et que tu prends un livre qui devrait etre rendu le 26juin alors il te dit de le rendre 25juin apres avoir fais ton pret, il fait un recap et te dit que tu dois le 
+    rendre 25Juin car on est feriées le 26juin mais si on fait moins alors date anterieur c'est-a-dire jours ouvrables plus proche antérieurement, par exemple si c'est lundi de pentecote que tu 
+    aurais du rendre le livre et que si la regle choisit est celui d'antérieur alors vendredi avant lundi de pentecote que tu dois rendre le livre si la Bibliotheque ne travaille pas samedi mais
+    samedi s'ils travaillent quand meme 
+
+
+ }
+
+QUESTION DES ELEVES :
+si par exemple y'a quelqu'un qui veut prolonger la date de rendu de pret de son livre or un autre adherent ayant vu la date de disponibilité a deja reservé le livre en question et a deja ete valider
+par le Bibliothecaire alors l'autre adherent ne peut plus prolonger le livre car c'est toujours celui valider par le Bibliothecaire en premier qui est prise en compte
+
+prolongement => parametrer absolument
+tous ce qu'on fera dans ce projet sera parametrables => car c'est cela un projet réel,aucun parametres dans les codes sources au pire fichier de configuration ou base et a un interface de configuration
+
+regles de jour ferié => par Bibliotheque ou par pret ? la reponse est par Bibliotheque et si l'Etat dit par exemple on est feriés a ce jour ou tel jour alors on introduiera dans le systeme ce jour en question
+et tous les prets contractés avant qu'on ait inserer ce nouveau jour ferié => change tous directement car par exemple il devait etre rendu en ce nouvel jour ferié meme or on vient d'introduire que ce jour etait
+ferié alors il devrait etre rendu avant ou apres dependra du parametrages qu'on aurait fait pour le jour ferié
+
+
+
+Synthetiser 
+documents avec toutes les fonctionnalités
+methodologie de developpement
+
+evident => doit avoir un dashboard, recherche avancé, livre le plus emprunter, livre le moins emprunter, detailler
+quel est l'indicateur qu'on placera pour les statistiques de tableau de bord ou dashboard 
+
+
+10.
+liste de fonctionnalités à faire
+comment expliquer ou donner des informations sur les fonctionnalités
+Exemple de cas : 1 fonctionnalités :
+on lui donne un nom
+doit etre infinitif => verbe d'action
+exemple : preter un livre/exemplaire
+
+fonctionnalités => un methode dans une couche service
+on devrait avoir une classe PreteService et dedans y'a une methode PreterLivre(ref exemplaire, ref adherent)
+
+description de cas d'utilisation qu'on fait en premier et c'est ca que le developper regarde pour etre transformer en code
+et l'ensemble de description + fonctionnalités => en grande partie appeler cahier de charge
+on implemente preter un exemplaire(reservation d'exemplaire) => on devrait avoir des informations qu'on ecrira=> et c'est ca qui est transformer en code
+
+UML => fonctionnalité => use case ou cas d'utilisation
+uml = methodologie pour faire la conception de systeme d'informations, donne bcp de diagramme, issu des besoins, si on veut creer , 1ere chose a faire => requiert de besoin
+recueil de besoin par le biais d'entretien(discussion environnement client, analyse de l'existant), etc apres => cahier de charge => besoin fonctionnel => liste et description fonctionnalités, besoin fonctionnels
+demande du client en terme de fonctionnalités futur du systeme
+listé fonctionnalités => on peut utiliser avec le cahier de charge => norme UML(à quelque chose pres) pour decrire chaque fonctionnalités, peut ne pas l'utilser mais utiliser d'autres canevas
+exemple textuelle ou excel
+
+ensemble DE CELA => grande partie => cahier de charge
+cahier de charge => besoin fonctionnels et besoins non fonctionnels(doivent etre mis dans le cahier de charge) => conception 
+.besoins non fonctionnels {
+    entretien => requiert de besoin, pas forcement un entretien peut etre le client fourni un document, dans le requiert des besoins,
+    on peut voir qu'y a des exigences, y'a d'autres besoins mais qui ne sont pas fonctionnels (durée de chargement de page, chart graphique,
+    par exemple des exigences comme faut utiliser dotnet car on a une license microsoft => devrait etre mise dans le cahier de charge)
+} 
+
+conception (architecture, technologies) { => en general conception relationnelle
+    donnees
+    traitement
+    => UML peut entrer dans l'expression et la presentation de la conception
+    conception relationnelle, on peut faire diagramme MPD (Model Physic de Donnee)
+    concepteur => on peut utliser schema proposé par UML pour remplir le document de la
+    conception
+    comment faire la conception de traitement de ceci => le notre, on ne demande pas encore ca maintenant
+    mais on peut tres bien l'exprimer avec les diagrammes d'UML (UML a 9 diagrammes)
+    conception => on a besoin d'exprimer la conception par rapport aux besoins ou exigences ecrit dans le cahier de charges
+    peut ne pas etre shematiser mais seulement textuelle 
+    exemple : table : colonne
+    reponse de la conception exprimer par nous humain, peut etre textuelle, schematiser
+    schema => plus rapide a lire et a comprendre, proposé par UML aux différentes etapes que ca soit au niveau cahier de charge,
+    traitement, conception, deploiement qu'on peut utliser pour faciliter la presentation de ce qu'on veut afficher que ca soit au niveau des
+    cahiers de charge ou conception relationnelle ou traitement ou deploiement => c'est le but de UML
+}
+
+cas d'utilisation => cahier de charges
+
+diagramme de cas d'utilisation => liste de fonctionnalités, au lieu de lister on fait cas d'utilisation par Acteur
+Par exemple Acteur Bibliothecaires {
+    il peut preter un livre/exemplaire
+    rendre un livre
+    ajouter un adherent
+}
+important => qu'on ait finit de decrire les fonctionnalité
+
+description des fonctionnalités {
+    qui profil peut ...
+    creer type de pret (
+        peut etre sur place ou a domicile => on doit avoir une table fonctionnalité 4 CRUD
+    )
+    a plusieurs regles de gestion doivent etre decrits correctement
+}
+
+
+11.
+Methode de travail dans git qu'on parlera dans ce projet et dans le projet en S5
+Approche {
+    mais qu'on ne trouvera pas forcement dans le monde du travail
+    il peut marcher que ca soit sur :
+    github
+    ou gitlab
+}
+
+technologies => un peu different mais c'est a nous de les rechercher
+normalement y'a toutes les Fonctionnalites dans github et gitlab
+
+quand on aurait fini les listes de Fonctionnalites et les descriptions de ces listes de Fonctionnalites consequentes
+on devrait maintenant decider de qui faire en premier genre develloper en preums
+toutes les fonctionnalités n'ont pas besoin d'interface
+et on devrait egalement decider lequel a besoin d'interface ou d'ecran
+on peut juste faire select ou script et non des plusieurs de CRUD mais la plupart devrait juste etre en script
+mais pour de vrai,  les Fonctionnalites qu'on a mis des descriptions detaillées devront etre implementer en general les autres juste script d'insertion seulement
+
+on devrait arranger ce qu'on devrait faire en premier quand on aurait fini la liste des fonctionnalités et on arrangera ce qu'on fera en premier, les fonctionnalités tous ça
+quand on trouvera cela, peut etre 1 ou 2 on les assemblera, voici ce qu'on devrait faire en preums, et ca peut etre un seul seulement et c'est pas grave, dans notre cas c'est pas grave
+peut par exemple ne faire d'abord qu'une fonctionnalité de recherche MULTICritere de livre
+
+Chaque fonctionnalités {
+
+    voici les cycles qu'on devrait faire :
+    les futurs fonctionnalités qu'on fera
+    creation d'une branche main ou principale(repository) dans github
+    on travail => on clone la branche
+    clone => nom => correspondant au nom du fonctionnalités (exemple :  futur...) => devrait vraiment correspondre aux fonctionnalités
+
+    on travail :
+    dans un cadre de spring, peut avoir plusieurs fonctionnalités
+    exemple on ne fera qu'1 seul fonctionnalités
+    on commitera apres avoir travailler le soir ou qu'on vient de travailler ou de finir quelque chose
+    on peut tester localement 
+
+    quand on est satisfait et qu'on a bien fini les fonctionnalités => on commit
+
+    on finit modele, repository, controller, a chaque finission d'etape on peut commite
+    ce n'est qu'a la fin qu'on teste localement si ca marche ou pas
+    et normalement on devrait directement merger ce "main" mais on ne fait pas de "merge" mais on fait "PR" ou "Pull Request"
+    "PR" = veut merger ces modifications, modif dans ces commit, on demande à merger, demande de merge
+    c'est vrai que dans ce projet on est responsable individuellement mais dans le monde réel(du travail), notre travail est develloper, on clonera la branche principale on nous donnera les fonctionnalités a implémenter
+    beaucoup de dev chacun son travail et on a besoin de ce "PR" pour demander a merger et on peut voir dans l'interface qu'on se demande un merge par rapport à une branche
+    et on demande à etre valider
+    ce branche => tous les modifs ici j'aimerais le merger dans cette branche principale
+    Demande de "PR" et non directe => merge
+
+
+    on regardera plus tard les listes de "PR", description => bien claire toujours correspondant aux noms des fonctionnalités,
+
+    reel {
+        equipe dans un devellopment info  technologies utiliser => tres agile, par exemple le projet est ce projet de bibliotheque, pas directement attaquer mais par exemple commencer par le module gestion de livre 
+        gestion livre non use case mais module et dedans y'a plusieurs use case ou cas d'utilisation et on choisit parmis ces cas d'utilisation par exemple develloper 1 va ajouter des livres et une autre va faire la recherche, etc
+        et cela dans une duree determiner, generalement en 2semaines c'est normalement la durée d'une sprint(ensemble d'une fonctionnalité), choix d'un sprint, commencement et finit jusqu' au test et deploiement
+        client test => anomalie => retour, satisfait => prochaine fonctionnalité
+        equipe dedans => y'a des roles => postes => TL
+    }
+
+    
+    nouvelle fonctionnalité => nouvelle branche => clone => fait des modifs => pull request => merge
+    PR qu'il regarde, apres cela on supprime le branche car on en a plus besoin, pas besoin de beaucoup de branches mais seulement branche en cours et branche principale
+
+
+   
+}
+
+
+
+Fonctionnalites {
+
+    recherche MULTICritere de livre
+}
+
+
+.soutenance {
+    y'a plusieurs points : à eviter :
+        -ne pas parler que de code, dans livre, presentation
+        -or il a fait configuration reseau, server et bcp d'autres choses qu'il a pas dit 
+        -car on a tendance a penser que travailler = coder seulement
+        -description textuelle => bien ecrire dans le livre = temps d'ecriture d'une partie de cahier de charge, voici les fonctionnalité que j'ai eu à ecrire
+        -formation => planning =>  nombres de jour, redaction manuelle user => nnbre de jour mais pas seulement code vu que le code c'est deja notre travail avec 
+        requiert de besoin, etc donc pas seulement focus concernant le code
+        -comment on a gerer CICD
+
+} 
+
+integration continue => continue avec deploiement continu {
+    branche => clone => travail => commit localement => on travail sur la fonctionnalité => modif => commit => PR => on accepte => merge @ branche principale
+    liste PR qu'il regardera
+}
+
+code non performant {
+    boucle inutile 
+    variable inutile
+}
+
+comment faire quand y'a deploiement  {
+    quand on a finit sprint en cours {
+        deployer => generalement => y'a 2envir minimum deploier app {
+            env de test
+            env de production
+            les merges de tous les develloper sont finis => deploiement de fonctionnalité develloper dans le sprint => creation de branche release
+            et dans release {
+                deploiement dans staging(env de test)
+                dans enviro staging => clone release et il l'a => peut compile et tous <= exemple, mais y'a deja des outils pour faire des deploiement => deploiement continu
+                clone simple => on a derniere version => on connait l'url release => creation branche release => on test => si y'a un probleme => 
+                test => y'a un probleme => alert au dev du probleme sur ce qui ne marche pas => creation de branche issu de main (dans le branche, on met BugFiles avec num de ticket car la plupartes des bugs fais dans le staging, c'est
+                le testeur qui fait le test, dans une equipe y'a dev TL et QA(Quality Assurance) et ce sont les QA qui font le test ce ne sont pas des deve et la majorité des femmes => creer ticket)
+                ticket => app gerer les futurs fonctionnalité generalement => "traineau, JiRA" => app qui gere
+                et dedans on dit voici les fonctionnalité dans ce sprint => ticket et y'a des num et assignés aux deve
+                bugs => creation d'un nouvel ticket 
+                creation branche => commit => test local => PR => TL decide s'il faut merger ou pas, si oui merger dans main(branche principale) mais en meme temps les modifs doivent etre envoyees aux branches release car c'est la branche 
+                qui va etre tester dans le staging vu qu'on ne peut pas encore faire merger des modifs a plusieurs branches mais seulement branche principale que tu demaned par le biais de PR mais apres dans l'interface y'a Cherry pic, PR appeler
+                Cherry Pic, prend le changement dans le PR et envoie et applique dans cette branche release, Cherry Pic a une source(changement de le PR) et destination(branche du release en cours) et il prend tous les modifs et ils appliquent dans
+                le release et ils redeploient et QA reteste et si c'est pas encore satisfait on recommence jusqu a etre satisfait, dans l'environnement staging ou de test ou preprod, on demande le deploiement du release dans environnement de production
+            }
+        }
+    }
+}
+
+
+demande {
+    -PR avant de merge
+}
+
+Fonctionnalité {
+    gestion = module et non fonctionnalité devrait etre diviser (gestion des adherents)
+    verbe d'action
+    details
+
+}
+
+EXEMPLE DE FONCTIONNALITE {
+    RESERVER UN EXEMPLAIRE
+}
+
+    reservation => non disponible a partir de la date de reservation 
+    date et heure pour la demande de reservation
+
+    details et reflexions important
+
+quand on fera nos livres => on pourra utiliser ce format qu'on apprend pour illustrer chacun des cas d'utilisation 
+
+
+12.
+On devrait avoir une liste de fonctionnalité par ACTEUR
+description OU usecase
+
+Titre
+description
+ACTEUR
+scenario nominal
+scenario alternative
+resultat

@@ -1,10 +1,9 @@
 package com.biblio.controller;
 
-import com.biblio.model.Adherent;
-import com.biblio.model.Profil;
-import com.biblio.model.User;
-import com.biblio.repository.AdherentRepository;
-import com.biblio.repository.UserRepository;
+import java.time.LocalDate;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -13,8 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpSession;
-import java.time.LocalDate;
+import com.biblio.model.Adherent;
+import com.biblio.model.Profil;
+import com.biblio.model.User;
+import com.biblio.repository.AdherentRepository;
+import com.biblio.repository.UserRepository;
+import com.biblio.service.ReservationService;
 
 @Controller
 public class AuthController {
@@ -24,6 +27,9 @@ public class AuthController {
 
     @Autowired
     private AdherentRepository adherentRepository;
+
+    @Autowired
+    private ReservationService reservationService;
 
     @GetMapping("/")
     public String showChoicePage() {
@@ -146,6 +152,8 @@ public class AuthController {
             return "signin";
         }
     }
+
+   
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {

@@ -2,6 +2,8 @@ package com.biblio.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "Adherent")
@@ -38,6 +40,12 @@ public class Adherent {
     @Column(name = "quotat_restant", nullable = true)
     private Integer quotaRestant;
 
+    @Column(name = "date_fin_sanction")
+    private LocalDate dateFinSanction;
+
+    @OneToMany(mappedBy = "adherent")
+    private List<Abonnement> abonnements;
+
     public Integer getQuotaRestant() {
         return quotaRestant;
     }
@@ -46,10 +54,20 @@ public class Adherent {
         this.quotaRestant = quotaRestant;
     }
 
+    public boolean isCotisationActive() {
+        if (abonnements == null || abonnements.isEmpty()) return false;
+        return abonnements.stream()
+                .filter(a -> a.getStatut() == Abonnement.Statut.ACTIVE)
+                .anyMatch(a -> LocalDate.now().isBefore(a.getDateFin()) && LocalDate.now().isAfter(a.getDateDebut()));
+    }
+
+    public boolean isSanctionne() {
+        return this.statut == StatutAdherent.SANCTIONNE;
+    }
+    
     public enum StatutAdherent {
         ACTIF, INACTIF, SANCTIONNE
     }
-
 
     // Constructeurs
     public Adherent() {}
@@ -129,5 +147,14 @@ public class Adherent {
         this.dateNaissance = dateNaissance;
     }
 
-    
+    public LocalDate getDateFinSanction() {
+        return dateFinSanction;
+    }
+
+    public void setDateFinSanction(LocalDate dateFinSanction) {
+        this.dateFinSanction = dateFinSanction;
+    }
+
+    public List<Abonnement> getAbonnements() { return abonnements; }
+    public void setAbonnements(List<Abonnement> abonnements) { this.abonnements = abonnements; }
 }

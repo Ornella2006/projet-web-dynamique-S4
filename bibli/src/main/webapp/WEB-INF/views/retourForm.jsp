@@ -9,6 +9,10 @@
                 <label for="idPret" class="form-label">ID du Prêt</label>
                 <input type="number" class="form-control" id="idPret" name="idPret" required>
             </div>
+            <div class="mb-3">
+                <label for="dateRetour" class="form-label">Date de retour (optionnel)</label>
+                <input type="date" class="form-control" id="dateRetour" name="dateRetour">
+            </div>
             <button type="submit" class="btn btn-custom w-100">Retourner le prêt</button>
             <c:if test="${not empty message}">
                 <p class="success">${message}</p>

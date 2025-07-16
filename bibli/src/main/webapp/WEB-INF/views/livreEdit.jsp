@@ -1,0 +1,52 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link href="/css/admin.css" rel="stylesheet">
+<c:set var="content">
+    <div class="form-container">
+        <h2>Modifier le Livre</h2>
+        <form action="/admin/livres/save" method="post">
+            <input type="hidden" name="idLivre" value="${livre.idLivre}">
+            
+            <div class="mb-3">
+                <label for="titre" class="form-label">Titre</label>
+                <input type="text" class="form-control" id="titre" name="titre" value="${livre.titre}" required>
+            </div>
+            <div class="mb-3">
+                <label for="auteur" class="form-label">Auteur</label>
+                <input type="text" class="form-control" id="auteur" name="auteur" value="${livre.auteur}">
+            </div>
+            <div class="mb-3">
+                <label for="editeur" class="form-label">Éditeur</label>
+                <input type="text" class="form-control" id="editeur" name="editeur" value="${livre.editeur}">
+            </div>
+            <div class="mb-3">
+                <label for="anneePublication" class="form-label">Année de publication</label>
+                <input type="number" class="form-control" id="anneePublication" name="anneePublication" 
+                       value="${livre.anneePublication}" min="1900" max="2099">
+            </div>
+            <div class="mb-3">
+                <label for="genre" class="form-label">Genre</label>
+                <input type="text" class="form-control" id="genre" name="genre" value="${livre.genre}">
+            </div>
+            <div class="mb-3">
+                <label for="isbn" class="form-label">ISBN</label>
+                <input type="text" class="form-control" id="isbn" name="isbn" value="${livre.isbn}">
+            </div>
+            <div class="mb-3">
+                <label for="restrictionAge" class="form-label">Âge minimum</label>
+                <input type="number" class="form-control" id="restrictionAge" name="restrictionAge" 
+                       value="${livre.restrictionAge}" min="0">
+            </div>
+            <div class="mb-3">
+                <label for="professeurSeulement" class="form-label">Réservé aux professeurs ?</label>
+                <select class="form-control" id="professeurSeulement" name="professeurSeulement">
+                    <option value="false" ${not livre.professeurSeulement ? 'selected' : ''}>Non</option>
+                    <option value="true" ${livre.professeurSeulement ? 'selected' : ''}>Oui</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-custom w-100">Enregistrer</button>
+        </form>
+        <a href="/admin/livres" class="btn btn-custom mt-3 w-100">Retour à la liste</a>
+    </div>
+</c:set>
+<%@ include file="adminDashboard.jsp" %>

@@ -1,45 +1,63 @@
 package com.biblio.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "Profil")
 public class Profil {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_profil")
     private int idProfil;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "type_profil", nullable = false)
     private TypeProfil typeProfil;
 
-    @Column(nullable = false)
+    @Column(name = "duree_pret", nullable = false)
     private int dureePret;
 
-    @Column(nullable = false)
+    @Column(name = "quota_pret", nullable = false)
     private int quotaPret;
 
-    @Column(nullable = false)
+    @Column(name = "quota_prolongement", nullable = false)
     private int quotaProlongement;
 
-    @Column(nullable = false)
+    @Column(name = "quota_reservation", nullable = false)
     private int quotaReservation;
 
-    @Column(nullable = false)
+    @Column(name = "duree_penalite", nullable = false)
     private int dureePenalite;
 
-    public Profil() {
+    public enum TypeProfil {
+        ETUDIANT, ENSEIGNANT, PROFESSIONNEL
     }
 
-    public Profil(Integer idProfil) {
+    // Constructeurs
+    public Profil() {}
+
+     public Profil(Integer idProfil) {
         this.idProfil = idProfil;
     }
 
-    public enum TypeProfil {
-        ETUDIANT, PROFESSEUR, PROFESSIONNEL
+    public Profil(int idProfil, TypeProfil typeProfil, int dureePret, int quotaPret, int quotaProlongement, int quotaReservation, int dureePenalite) {
+        this.idProfil = idProfil;
+        this.typeProfil = typeProfil;
+        this.dureePret = dureePret;
+        this.quotaPret = quotaPret;
+        this.quotaProlongement = quotaProlongement;
+        this.quotaReservation = quotaReservation;
+        this.dureePenalite = dureePenalite;
     }
 
-    // Getters and Setters
+    // Getters et Setters
     public int getIdProfil() { return idProfil; }
     public void setIdProfil(int idProfil) { this.idProfil = idProfil; }
     public TypeProfil getTypeProfil() { return typeProfil; }

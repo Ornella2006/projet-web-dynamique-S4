@@ -1,13 +1,19 @@
 package com.biblio.service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.DayOfWeek;
+import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import com.biblio.exception.PretException;
 import com.biblio.model.Abonnement;
@@ -16,158 +22,253 @@ import com.biblio.model.Exemplaire;
 import com.biblio.model.JourFerie;
 import com.biblio.model.Pret;
 import com.biblio.model.Profil;
+import com.biblio.model.Prolongement;
+import com.biblio.model.Reservation;
 import com.biblio.repository.AbonnementRepository;
 import com.biblio.repository.AdherentRepository;
 import com.biblio.repository.ExemplaireRepository;
 import com.biblio.repository.JourFerieRepository;
 import com.biblio.repository.PretRepository;
+import com.biblio.repository.ProlongementRepository;
+import com.biblio.repository.ReservationRepository;
 
 @Service
 public class PretService {
 
     @Autowired
+    private PretRepository pretRepository;
+    @Autowired
+    private ProlongementRepository prolongementRepository;
+    @Autowired
     private AdherentRepository adherentRepository;
-
+   
+   
     @Autowired
     private ExemplaireRepository exemplaireRepository;
-
-    @Autowired
-    private PretRepository pretRepository;
-
-    @Autowired
-    private AbonnementRepository abonnementRepository;
-
     @Autowired
     private JourFerieRepository jourFerieRepository;
+    @Autowired
+    private AbonnementRepository abonnementRepository;
+    @Autowired
+    private ReservationRepository reservationRepository;
 
-    @Transactional
-    public Pret preterExemplaire(int idAdherent, int idExemplaire, String typePret) {
-        System.out.println("Début preterExemplaire: idAdherent=" + idAdherent + ", idExemplaire=" + idExemplaire + ", typePret=" + typePret);
+    @Value("${prolongation.jours_avance:2}") // Configurable via application.properties
+    private int joursAvanceMin;
 
-        // Valider l'adhérent
-        Adherent adherent = adherentRepository.findById(idAdherent)
-                .orElseThrow(() -> new PretException("L'adhérent n'existe pas."));
-        System.out.println("Adhérent trouvé: " + adherent.getIdAdherent() + ", Statut: " + adherent.getStatut());
+ @Transactional
+public Pret preterExemplaire(int idAdherent, int idExemplaire, String typePret, LocalDate datePret, LocalDate dateRetourPrevue, Model model) {
+    List<String> errors = new ArrayList<>();
 
-        // Vérifier le statut de l'adhérent
+    Adherent adherent = adherentRepository.findById(idAdherent).orElse(null);
+    if (adherent == null) {
+        errors.add("L'adhérent n'existe pas.");
+    } else {
         if (adherent.getStatut() == Adherent.StatutAdherent.SANCTIONNE) {
-            throw new PretException("L'adhérent est sous sanction.");
+            errors.add("L'adhérent est sous sanction jusqu'à " + adherent.getDateFinSanction() + ".");
         }
-
-        // Vérifier l'abonnement actif
         LocalDate currentDate = LocalDate.now();
-        Abonnement abonnement = abonnementRepository.findActiveAbonnementByAdherent(idAdherent, currentDate);
+        Abonnement abonnement = abonnementRepository.findActiveAbonnementByAdherent(adherent, currentDate).orElse(null);
         if (abonnement == null) {
-            throw new PretException("Aucun abonnement actif trouvé pour cet adhérent.");
+            errors.add("Aucune cotisation active trouvée.");
         }
-        System.out.println("Abonnement trouvé: " + abonnement.getIdAbonnement());
-
-        // Vérifier l'exemplaire
-        Exemplaire exemplaire = exemplaireRepository.findById(idExemplaire)
-                .orElseThrow(() -> new PretException("L'exemplaire n'existe pas."));
-        System.out.println("Exemplaire trouvé: " + exemplaire.getIdExemplaire() + ", Statut: " + exemplaire.getStatut());
-        if (exemplaire.getStatut() != Exemplaire.StatutExemplaire.DISPONIBLE) {
-            throw new PretException("L'exemplaire n'est pas disponible.");
-        }
-
-        // Vérifier la restriction d'âge
-        int age = LocalDate.now().getYear() - adherent.getDateNaissance().getYear();
-        if (exemplaire.getLivre().getRestrictionAge() > age) {
-            throw new PretException("L'adhérent ne satisfait pas à la restriction d'âge.");
-        }
-
-        // Vérifier la restriction professeur
-        if (exemplaire.getLivre().isProfesseurSeulement() && adherent.getProfil().getTypeProfil() != Profil.TypeProfil.PROFESSEUR) {
-            throw new PretException("Livre réservé aux professeurs.");
-        }
-
-        // Vérifier le quota de prêts
-        long activePrets = pretRepository.countActivePretsByAdherent(idAdherent);
-        System.out.println("Nombre de prêts actifs: " + activePrets + ", Quota: " + adherent.getProfil().getQuotaPret()+ ", Quota restant: " + adherent.getQuotaRestant());
-        if (activePrets >= adherent.getProfil().getQuotaPret() || adherent.getQuotaRestant() <= 0) {
-            throw new PretException("L'adhérent a atteint son quota de prêts.");
-        }
-        adherent.setQuotaRestant(adherent.getQuotaRestant() - 1);
-        adherentRepository.save(adherent);  
-
-        // Calculer la date de retour prévue
-        LocalDateTime datePret = LocalDateTime.now();
-        LocalDateTime dateRetourPrevue = datePret.plusDays(adherent.getProfil().getDureePret());
-        System.out.println("Date prêt: " + datePret + ", Date retour prévue: " + dateRetourPrevue);
-
-        // Vérifier les jours fériés
-        List<JourFerie> joursFeries = jourFerieRepository.findByDateFerieBetween(
-                datePret.toLocalDate(), dateRetourPrevue.toLocalDate());
-        for (JourFerie jour : joursFeries) {
-            System.out.println("Jour férié trouvé: " + jour.getDateFerie());
-            if (jour.getRegleRendu() == JourFerie.RegleRendu.AVANT
-                    && jour.getDateFerie().isEqual(dateRetourPrevue.toLocalDate())) {
-                dateRetourPrevue = dateRetourPrevue.minusDays(1);
-            } else if (jour.getRegleRendu() == JourFerie.RegleRendu.APRES
-                    && jour.getDateFerie().isEqual(dateRetourPrevue.toLocalDate())) {
-                dateRetourPrevue = dateRetourPrevue.plusDays(1);
-            }
-        }
-
-        while (dateRetourPrevue.getDayOfWeek() == DayOfWeek.SATURDAY || 
-               dateRetourPrevue.getDayOfWeek() == DayOfWeek.SUNDAY) {
-            System.out.println("Date retour prévue tombe un week-end: " + dateRetourPrevue);
-            dateRetourPrevue = dateRetourPrevue.minusDays(1); // Avancer au vendredi précédent
-        }
-
-        //si je veux que ça soit repousser au lundi (apres au lieu d'avant)
-        /* while (dateRetourPrevue.getDayOfWeek() == DayOfWeek.SATURDAY || 
-            dateRetourPrevue.getDayOfWeek() == DayOfWeek.SUNDAY) {
-            System.out.println("Date retour prévue tombe un week-end: " + dateRetourPrevue);
-            dateRetourPrevue = dateRetourPrevue.plusDays(1); // Repousser au lundi suivant
-        } */
-
-        joursFeries = jourFerieRepository.findByDateFerieBetween(
-                datePret.toLocalDate(), dateRetourPrevue.toLocalDate());
-        for (JourFerie jour : joursFeries) {
-            System.out.println("Jour férié trouvé après ajustement: " + jour.getDateFerie());
-            if (jour.getRegleRendu() == JourFerie.RegleRendu.AVANT
-                    && jour.getDateFerie().isEqual(dateRetourPrevue.toLocalDate())) {
-                dateRetourPrevue = dateRetourPrevue.minusDays(1);
-            } else if (jour.getRegleRendu() == JourFerie.RegleRendu.APRES
-                    && jour.getDateFerie().isEqual(dateRetourPrevue.toLocalDate())) {
-                dateRetourPrevue = dateRetourPrevue.plusDays(1);
-            }
-        }
-
-        System.out.println("Date retour prévue ajustée: " + dateRetourPrevue);
-
-        // Créer le prêt
-        Pret pret = new Pret();
-        pret.setAdherent(adherent);
-        pret.setExemplaire(exemplaire);
-        try {
-            pret.setTypePret(Pret.TypePret.valueOf(typePret.replace(" ", "_").toUpperCase()));
-        } catch (IllegalArgumentException e) {
-            System.out.println("Erreur typePret: " + typePret);
-            throw new PretException("Type de prêt invalide: " + typePret);
-        }
-        pret.setDatePret(datePret);
-        pret.setDateRetourPrevue(dateRetourPrevue);
-
-        // Mettre à jour le statut de l'exemplaire
-        exemplaire.setStatut(Pret.TypePret.valueOf(typePret.replace(" ", "_").toUpperCase()) == Pret.TypePret.DOMICILE
-                ? Exemplaire.StatutExemplaire.EN_PRET
-                : Exemplaire.StatutExemplaire.LECTURE_SUR_PLACE);
-        System.out.println("Nouveau statut exemplaire: " + exemplaire.getStatut());
-
-        // Enregistrer les changements
-        try {
-            exemplaireRepository.save(exemplaire);
-            System.out.println("Exemplaire enregistré: " + exemplaire.getIdExemplaire());
-            pretRepository.save(pret);
-            System.out.println("Prêt enregistré: " + pret.getIdPret());
-            return pret; // Retourner l'objet Pret
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new PretException("Erreur lors de l'enregistrement du prêt: " + e.getMessage());
+        long activeLoans = pretRepository.countActivePretsByAdherent(idAdherent);
+        if (activeLoans >= adherent.getProfil().getQuotaPret()) {
+            errors.add("L'adhérent a atteint son quota de prêts.");
         }
     }
 
-   
+    Exemplaire exemplaire = exemplaireRepository.findById(idExemplaire).orElse(null);
+    if (exemplaire == null) {
+        errors.add("L'exemplaire n'existe pas.");
+    } else if (exemplaire.getStatut() != Exemplaire.StatutExemplaire.DISPONIBLE) {
+        errors.add("L'exemplaire n'est pas disponible.");
+    }
+
+    if (!errors.isEmpty()) {
+        throw new PretException(String.join(" et ", errors));
+    }
+
+    LocalDate effectiveDatePret = datePret != null ? datePret : LocalDate.now();
+    if (isWeekendOrHoliday(effectiveDatePret)) {
+        throw new PretException("La date de prêt ne peut pas être un week-end ou un jour férié. Veuillez choisir une autre date.");
+    }
+
+    if (adherent != null && exemplaire != null) {
+        int age = Period.between(adherent.getDateNaissance(), LocalDate.now()).getYears();
+        if (exemplaire.getLivre().getRestrictionAge() > age) {
+            throw new PretException("L'adhérent ne satisfait pas à la restriction d'âge.");
+        }
+        if (exemplaire.getLivre().isENSEIGNANTSeulement() && adherent.getProfil().getTypeProfil() != Profil.TypeProfil.ENSEIGNANT) {
+            throw new PretException("Livre réservé aux ENSEIGNANTs.");
+        }
+
+        if (dateRetourPrevue == null) {
+            dateRetourPrevue = effectiveDatePret.plusDays(adherent.getProfil().getDureePret());
+        }
+
+        LocalDate adjustedDateRetourPrevue = ajusterPourJoursFeries(dateRetourPrevue);
+        if (!adjustedDateRetourPrevue.equals(dateRetourPrevue)) {
+            System.out.println("Ajustement de la date de retour : de " + dateRetourPrevue + " à " + adjustedDateRetourPrevue + " en raison d'un jour férié ou week-end.");
+        }
+
+        Pret pret = new Pret();
+        pret.setAdherent(adherent);
+        pret.setExemplaire(exemplaire);
+        pret.setTypePret(Pret.TypePret.valueOf(typePret.replace(" ", "_").toUpperCase()));
+        pret.setDatePret(effectiveDatePret);
+        pret.setDateRetourPrevue(adjustedDateRetourPrevue);
+
+        exemplaire.setStatut(pret.getTypePret() == Pret.TypePret.DOMICILE
+                ? Exemplaire.StatutExemplaire.EN_PRET
+                : Exemplaire.StatutExemplaire.LECTURE_SUR_PLACE);
+        exemplaireRepository.save(exemplaire);
+        pretRepository.save(pret);
+
+        if (adherent.getQuotaRestant() == null) {
+            adherent.setQuotaRestant(adherent.getProfil().getQuotaPret());
+        }
+        adherent.setQuotaRestant(adherent.getQuotaRestant() - 1);
+        adherentRepository.save(adherent);
+
+        // Retourner le prêt avec la date ajustée
+        return pret;
+    }
+    return null;
+}
+
+private LocalDate ajusterPourJoursFeries(LocalDate date) {
+    List<JourFerie> joursFeries = jourFerieRepository.findAll();
+    LocalDate dateAjustee = date;
+    boolean ajustementNecessaire;
+
+    do {
+        ajustementNecessaire = false;
+        // Vérification des week-ends (décaler au lundi si dimanche, ou au vendredi si samedi)
+        if (dateAjustee.getDayOfWeek() == DayOfWeek.SATURDAY) {
+            dateAjustee = dateAjustee.minusDays(1); // Décaler au vendredi
+            ajustementNecessaire = true;
+        } else if (dateAjustee.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            dateAjustee = dateAjustee.minusDays(2); // Décaler au lundi
+            ajustementNecessaire = true;
+        }
+        // Vérification des jours fériés
+        for (JourFerie jourFerie : joursFeries) {
+            if (jourFerie.getDateFerie().equals(dateAjustee)) {
+                ajustementNecessaire = true;
+                if (jourFerie.getRegleRendu() == JourFerie.RegleRendu.AVANT) {
+                    dateAjustee = dateAjustee.minusDays(1);
+                } else {
+                    dateAjustee = dateAjustee.minusDays(2);
+                }
+                /* if (jourFerie.getRegleRendu() == JourFerie.RegleRendu.APRES) {
+                    dateAjustee = dateAjustee.plusDays(1);
+                } else {
+                    dateAjustee = dateAjustee.plusDays(1);
+                } */
+                break;
+            }
+        }
+    } while (ajustementNecessaire);
+
+    return dateAjustee;
+}
+
+// Méthode utilitaire pour vérifier si une date est un week-end ou un jour férié
+private boolean isWeekendOrHoliday(LocalDate date) {
+    DayOfWeek day = date.getDayOfWeek();
+    if (day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY) {
+        return true;
+    }
+    return jourFerieRepository.existsByDateFerie(date);
+}
+
+    // Surcharge pour la compatibilité avec l'appel existant
+    public Pret preterExemplaire(int idAdherent, int idExemplaire, String typePret) {
+        return preterExemplaire(idAdherent, idExemplaire, typePret, null, null, null);
+    }
+
+    @Value("${prolongation.max_parallele:2}") // Maximum de prolongements parallèles
+    private int maxProlongementsParalleles;
+
+    @Transactional
+public Prolongement demanderProlongation(int idPret, LocalDate nouvelleDateRetour, HttpSession session) throws PretException {
+    com.biblio.model.User user = (com.biblio.model.User) session.getAttribute("user");
+    if (user == null || user.getRole() != com.biblio.model.User.Role.ADHERENT) {
+        throw new PretException("Utilisateur non connecté ou non autorisé.");
+    }
+
+    Pret pret = pretRepository.findById(idPret)
+            .orElseThrow(() -> new PretException("Prêt inexistant."));
+            LocalDate currentDate = LocalDate.now();
+    
+    Adherent adherent = pret.getAdherent();
+    Abonnement abonnement = abonnementRepository.findActiveAbonnementByAdherent(adherent, currentDate)
+            .orElseThrow(() -> new PretException("Cotisation inactive."));
+    if (!adherent.isCotisationActive()) {
+        throw new PretException("Cotisation inactive.");
+    }
+    if (adherent.isSanctionne()) {
+        throw new PretException("Adhérent sous sanction jusqu'à la fin de la pénalité.");
+    }
+    if (abonnement.getDateFin().isBefore(currentDate.plusDays(7))) {
+        throw new PretException("L'abonnement est bientôt terminé. Veuillez le renouveler avant de demander une prolongation.");
+    }
+    if (pret.getDateRetourEffective() != null) {
+        throw new PretException("Prêt déjà retourné.");
+    }
+    long prolongementsEnCours = prolongementRepository.countByAdherentAndStatut(adherent, Prolongement.StatutProlongement.EN_ATTENTE);
+    if (prolongementsEnCours >= maxProlongementsParalleles) {
+        throw new PretException("Quota de prolongements parallèles (" + maxProlongementsParalleles + ") dépassé.");
+    }
+    if (pret.getProlongationCount() >= adherent.getProfil().getQuotaProlongement()) {
+        throw new PretException("Quota de prolongements total dépassé.");
+    }
+    LocalDate dateLimite = pret.getDateRetourPrevue().minusDays(joursAvanceMin);
+    if (LocalDate.now().isAfter(dateLimite)) {
+        throw new PretException("Demande trop tardive, " + joursAvanceMin + " jours d'avance requis.");
+    }
+    if (reservationRepository.existsByExemplaireAndStatut(pret.getExemplaire(), Reservation.Statut.VALIDEE)) {
+        throw new PretException("Impossible de prolonger, exemplaire réservé.");
+    }
+
+    LocalDate dateAjustee = ajusterPourJoursFeries(nouvelleDateRetour);
+    Prolongement prolongement = new Prolongement();
+    Prolongement savedProlongement = prolongementRepository.save(prolongement);
+System.out.println("Prolongement sauvegardé avec ID: " + savedProlongement.getIdProlongement());
+return savedProlongement;
+}
+
+    @Transactional
+    public void validerProlongation(int idProlongement) throws PretException {
+        Prolongement prolongement = prolongementRepository.findById(idProlongement)
+                .orElseThrow(() -> new PretException("Prolongement inexistant."));
+        if (prolongement.getStatut() != Prolongement.StatutProlongement.EN_ATTENTE) {
+            throw new PretException("Prolongement déjà traité.");
+        }
+
+        Pret pret = prolongement.getPret();
+        pret.setDateRetourPrevue(prolongement.getNouvelleDateRetour());
+        pret.setProlongationCount(pret.getProlongationCount() + 1);
+        prolongement.setStatut(Prolongement.StatutProlongement.VALIDE);
+        pretRepository.save(pret);
+        prolongementRepository.save(prolongement);
+    }
+
+    @Transactional
+    public void rejeterProlongation(int idProlongement) throws PretException {
+        Prolongement prolongement = prolongementRepository.findById(idProlongement)
+                .orElseThrow(() -> new PretException("Prolongement inexistant."));
+        if (prolongement.getStatut() != Prolongement.StatutProlongement.EN_ATTENTE) {
+            throw new PretException("Prolongement déjà traité.");
+        }
+        prolongement.setStatut(Prolongement.StatutProlongement.REFUSE);
+        prolongementRepository.save(prolongement);
+    }
+
+
+    public List<Pret> findPretsByAdherentId(int idAdherent) {
+        return pretRepository.findAll().stream()
+                .filter(p -> p.getAdherent().getIdAdherent() == idAdherent)
+                .toList();
+    }
 }

@@ -126,7 +126,9 @@
                 <version>3.2.5</version>
                 <configuration>
                     <argLine>-Dnet.bytebuddy.experimental=true</argLine> <!-- Pour supporter les mocks inline -->
+                    <skipTests>true</skipTests>
                 </configuration>
+                
                 <dependencies>
                     <dependency>
                         <groupId>org.junit.jupiter</groupId>

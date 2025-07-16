@@ -19,9 +19,15 @@ Cotisation => pas de penalité
 penalisation => non retour de livre
 
 
+-----27/26/25------------
 Les trucs que notre prof corrigerai :
 Pull Request
 Conception de base de données => MPD = Model Physics de Données => si y'a une faute on a pas de note haute
 ecran liste de tous les Pull Request qu'on fera
+
+cotisation => pas de penalité
+mais il peut dire j'ai plus d'abonnement c'est fini aujourd'hui et il n'est pas penalisé
+
+penalisation => non retour de livre seulement
 
 

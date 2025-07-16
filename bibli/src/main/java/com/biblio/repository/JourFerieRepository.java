@@ -9,4 +9,5 @@ import com.biblio.model.JourFerie;
 
 public interface JourFerieRepository extends JpaRepository<JourFerie, Integer> {
     List<JourFerie> findByDateFerieBetween(LocalDate startDate, LocalDate endDate);
+    boolean existsByDateFerie(LocalDate dateFerie); // Nouvelle méthode
 }

@@ -76,7 +76,7 @@ public class User {
         return adherent;
     }
 
-    public void setAdherent(Adherent adherent) {
-        this.adherent = adherent;
+    public void setAdherent(Adherent adherent2) {
+        this.adherent = adherent2;
     }
 }

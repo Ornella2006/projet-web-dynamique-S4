@@ -14,7 +14,7 @@
         <div class="container">
             <h1 class="text-center mb-4" style="color: white; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Tableau de Bord Adhérent</h1>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 mx-auto">
                     <div class="card p-4 mb-4 text-center">
                         <h3 class="card-title">Bienvenue, Adhérent</h3>
                         <p class="card-text">Utilisez le menu à gauche pour consulter vos prêts, réservations ou votre profil.</p>
